@@ -1,0 +1,368 @@
+Welcome to the ForSyDe IO to C compiler!
+The input file is:
+toy_sdf_small_cycle.fiodl
+ 
+Vertex:
+Name: p1
+
+Attributes:
+moc = sdf, SDFActor
+visualization = Visualizable
+impl = InstrumentedExecutable
+
+Signals:
+sin
+s1
+s6
+
+Parameters:
+sizeInBits = 800, l
+operationRequirements = 
+default = 
+integer add = 2, l
+consumption = 
+sin = 2, i
+s6 = 1, i
+production = 
+s1 = 1, i
+
+
+Vertex:
+Name: p2
+
+Attributes:
+moc = sdf, SDFActor
+visualization = Visualizable
+impl = InstrumentedExecutable
+
+Signals:
+s1
+s2
+s3
+
+Parameters:
+sizeInBits = 800, l
+operationRequirements = 
+default = 
+integer add = 1, l
+consumption = 
+s1 = 1, i
+production = 
+s2 = 1, i
+s3 = 1, i
+
+
+Vertex:
+Name: p3
+
+Attributes:
+moc = sdf, SDFActor
+visualization = Visualizable
+impl = InstrumentedExecutable
+
+Signals:
+s3
+s5
+s6
+
+Parameters:
+sizeInBits = 800, l
+operationRequirements = 
+default = 
+integer add = 2, l
+consumption = 
+s3 = 2, i
+s5 = 2, i
+production = 
+s6 = 2, i
+
+
+Vertex:
+Name: p4
+
+Attributes:
+moc = sdf, SDFActor
+visualization = Visualizable
+impl = InstrumentedExecutable
+
+Signals:
+s2
+s4
+sout
+
+Parameters:
+sizeInBits = 800, l
+operationRequirements = 
+default = 
+integer add = 2, l
+consumption = 
+s2 = 1, i
+production = 
+s4 = 1, i
+sout = 3, i
+
+
+Vertex:
+Name: p5
+
+Attributes:
+moc = sdf, SDFActor
+visualization = Visualizable
+impl = InstrumentedExecutable
+
+Signals:
+s4
+s5
+
+Parameters:
+sizeInBits = 800, l
+operationRequirements = 
+default = 
+integer add = 1, l
+consumption = 
+s4 = 1, i
+production = 
+s5 = 1, i
+
+
+Vertex:
+Name: s1Sig
+
+Attributes:
+moc = sdf, SDFChannel
+visualization = Visualizable
+
+Signals:
+producer
+consumer
+initialTokenValues
+
+Parameters:
+numOfInitialTokens = 0, i
+
+
+Vertex:
+Name: s2Sig
+
+Attributes:
+moc = sdf, SDFChannel
+visualization = Visualizable
+
+Signals:
+producer
+consumer
+initialTokenValues
+
+Parameters:
+numOfInitialTokens = 0, i
+
+
+Vertex:
+Name: s3Sig
+
+Attributes:
+moc = sdf, SDFChannel
+visualization = Visualizable
+
+Signals:
+producer
+consumer
+initialTokenValues
+
+Parameters:
+numOfInitialTokens = 0, i
+
+
+Vertex:
+Name: s4Sig
+
+Attributes:
+moc = sdf, SDFChannel
+visualization = Visualizable
+
+Signals:
+producer
+consumer
+initialTokenValues
+
+Parameters:
+numOfInitialTokens = 0, i
+
+
+Vertex:
+Name: s5Sig
+
+Attributes:
+moc = sdf, SDFChannel
+visualization = Visualizable
+
+Signals:
+producer
+consumer
+initialTokenValues
+
+Parameters:
+numOfInitialTokens = 0, i
+
+
+Vertex:
+Name: s6Sig
+
+Attributes:
+moc = sdf, SDFChannel
+visualization = Visualizable
+
+Signals:
+producer
+consumer
+initialTokenValues
+
+Parameters:
+numOfInitialTokens = 2, i
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: p1
+From Port: s1
+
+To Signal: s1Sig
+To Port: producer
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: s1Sig
+From Port: consumer
+
+To Signal: p2
+To Port: s1
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: p2
+From Port: s2
+
+To Signal: s2Sig
+To Port: producer
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: p2
+From Port: s3
+
+To Signal: s3Sig
+To Port: producer
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: s2Sig
+From Port: consumer
+
+To Signal: p4
+To Port: s2
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: s3Sig
+From Port: consumer
+
+To Signal: p3
+To Port: s3
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: p4
+From Port: s4
+
+To Signal: s4Sig
+To Port: producer
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: s4Sig
+From Port: consumer
+
+To Signal: p5
+To Port: s4
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: p5
+From Port: s5
+
+To Signal: s5Sig
+To Port: producer
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: s5Sig
+From Port: consumer
+
+To Signal: p3
+To Port: s5
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: p3
+From Port: s6
+
+To Signal: s6Sig
+To Port: producer
+
+
+Edge:
+Attributes:
+moc = sdf, SDFDataEdge
+visualization = VisualConnection
+
+From Signal: s6Sig
+From Port: consumer
+
+To Signal: p1
+To Port: s6
+
+
+
