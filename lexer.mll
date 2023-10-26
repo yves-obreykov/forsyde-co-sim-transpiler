@@ -6,11 +6,13 @@ open Parser
 
 exception SyntaxError of string
 
-let next_line lexbuf =
+let incr_lineno lexbuf =
   let pos = lexbuf.lex_curr_p in
-  lexbuf.lex_curr_p <-
-    { pos with pos_bol = lexbuf.lex_curr_pos;
-               pos_lnum = pos.pos_lnum + 1
+    lexbuf.lex_curr_p <- 
+    { 
+      pos with
+        pos_lnum = pos.pos_lnum + 1;
+        pos_bol = pos.pos_cnum;
     }
 }
 
@@ -24,22 +26,21 @@ let exp = ['e' 'E'] ['-' '+']? digit+
 let float = digit* frac? exp?
 
 let white = [' ' '\t']+
-let newline = '\r' | '\n' | "\r\n"
+let newline = '\r' | '\n' | "\r\n" | "\n\r"
 let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 rule read =
   parse
-  | " to"     {TO}
+  | " to "     {TO}
+  | " from "   {FROM}
+  | " port "   {PORT}
   | white    { read lexbuf }
-  | newline  { next_line lexbuf; read lexbuf }
+  | newline  { incr_lineno lexbuf; read lexbuf }
   | int      { INT (int_of_string (Lexing.lexeme lexbuf)) }
-  | '_'      { UNDERSCORE }
   | char     { CHAR (Lexing.lexeme lexbuf).[0] }
   | "systemgraph" {SYSTEMGRAPH}
   | "vertex" {VERTEX}
   | "edge"   {EDGE}
-  | "from"   {FROM}
-  | "port"   {PORT}
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '{'      { LEFT_BRACE }
   | '}'      { RIGHT_BRACE }
@@ -62,7 +63,12 @@ and read_string buf =
   | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
   | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
   | [^ '"' '\\']+
-    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+    {
+      let lxm = (Lexing.lexeme lexbuf) in
+      for i = 0 to String.length lxm - 1 do
+        if lxm.[i] = '\n' then incr_lineno lexbuf
+      done;
+      Buffer.add_string buf lxm;
       read_string buf lexbuf
     }
   | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
