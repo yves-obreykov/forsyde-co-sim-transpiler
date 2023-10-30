@@ -4,6 +4,7 @@ open Lexer
 open Ast
 open Lexing
 open Printf
+open Hybrid_ir
 
 let print_position out_channel lexbuf =
   let pos = lexbuf.lex_curr_p in
@@ -21,7 +22,7 @@ let parse_with_error lexbuf =
       fprintf stderr "%a: syntax error\n" print_position lexbuf;
       exit (-1)
   in
-  print_endline (pprint_systemgraph res)
+  print_endline (pprint_systemgraph res); print_endline (pprint_hybrid_ir (make_hybrid_ir res))
 
 let () =
   print_endline "Welcome to the ForSyDe IO to C compiler!";
