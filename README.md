@@ -4,5 +4,6 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 # Current status: Takes an .fiodl input file, makes Abstarct Syntax Tree (AST) and pretty prints it to terminal
 
 # Steps to execute
-1. run "make"
-2. run "./transpiler toy_sdf_small_cycle.fiodl"
+1. go to transpiler directory
+2. run "make"
+3. run "./transpiler ../fiodl-files/toy_sdf_small_cycle.fiodl"
