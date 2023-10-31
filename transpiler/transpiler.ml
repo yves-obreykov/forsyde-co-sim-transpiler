@@ -22,7 +22,15 @@ let parse_with_error lexbuf =
       fprintf stderr "%a: syntax error\n" print_position lexbuf;
       exit (-1)
   in
-  print_endline (pprint_systemgraph res); print_endline (pprint_hybrid_ir (make_hybrid_ir res))
+  print_endline ("AST is done");
+  print_endline ("AST is: ");
+  print_endline (pprint_systemgraph res);
+  print_endline ("Making hybrid IR...");
+  let res2 = make_hybrid_ir res
+  in
+  print_endline ("Making hybrid IR is done");
+  print_endline ("Hybrid IR is: ");
+  print_endline (pprint_hybrid_ir res2)
 
 let () =
   print_endline "Welcome to the ForSyDe IO to C compiler!";
