@@ -699,3 +699,59 @@ void unzip6SY(struct SignalTuple6* signal, struct Signal **result1, struct Signa
         signal = signal->next;
     }
 }
+
+
+// TODO zipxSY
+// TODO unzipxSY
+
+// -- | The process 'fstSY' selects always the first value from a signal
+// -- of pairs.
+// Source code:
+// fstSY :: Signal (a,b) -> Signal a
+// fstSY = mapSY fst 
+void fstSY(struct SignalTuple* signal, struct Signal** result) {
+    struct Signal* currentResult = NULL;
+
+    while (signal != NULL) {
+        int data1 = signal->data1;
+        if (*result == NULL) {
+            *result = (struct Signal*)malloc(sizeof(struct Signal));
+            (*result)->data = data1;
+            (*result)->next = NULL;
+            currentResult = *result;
+        } else {
+            currentResult->next = (struct Signal*)malloc(sizeof(struct Signal));
+            currentResult = currentResult->next;
+            currentResult->data = data1;
+            currentResult->next = NULL;
+        }
+
+        signal = signal->next;
+    }
+}
+
+// -- | The process 'sndSY' selects always the second value from a signal
+// -- of pairs.
+// Source code:
+// sndSY :: Signal (a,b) -> Signal b
+// sndSY = mapSY snd
+void sndSY(struct SignalTuple* signal, struct Signal** result) {
+    struct Signal* currentResult = NULL;
+
+    while (signal != NULL) {
+        int data2 = signal->data2;
+        if (*result == NULL) {
+            *result = (struct Signal*)malloc(sizeof(struct Signal));
+            (*result)->data = data2;
+            (*result)->next = NULL;
+            currentResult = *result;
+        } else {
+            currentResult->next = (struct Signal*)malloc(sizeof(struct Signal));
+            currentResult = currentResult->next;
+            currentResult->data = data2;
+            currentResult->next = NULL;
+        }
+
+        signal = signal->next;
+    }
+}
