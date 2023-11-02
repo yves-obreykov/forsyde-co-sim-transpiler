@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // Define a Signal structure
 struct Signal
@@ -7,7 +8,9 @@ struct Signal
     struct Signal *next;
 };
 
+////////////////////////////////////////
 /* Combinational process constructors */
+////////////////////////////////////////
 
 // Source Code:
 // mapSY :: (a -> b) -> Signal a -> Signal b
@@ -171,6 +174,11 @@ void comb4SY(int (*function)(int, int, int, int), struct Signal *signal1, struct
     zipWith4SY(function, signal1, signal2, signal3, signal4, result);
 }
 
+
+/////////////////////////////////////
+/* Sequential process constructors */
+/////////////////////////////////////
+
 // Source code:
 // delaySY :: a        -- ^Initial state
 //         -> Signal a -- ^Input signal
@@ -214,16 +222,11 @@ void delaynSY(int initial, int delayCycles, struct Signal **signal)
     }
 
     // Append the original signal to the delayed part
-    struct Signal *currentSignal = *signal;
-    while (currentSignal != NULL)
-    {
-        struct Signal *newNode = (struct Signal *)malloc(sizeof(struct Signal));
-        newNode->data = currentSignal->data;
-        newNode->next = delayedSignal;
-        delayedSignal = newNode;
-        currentSignal = currentSignal->next;
+    struct Signal *delayTail = delayedSignal;
+    while (delayTail->next != NULL) {
+        delayTail = delayTail->next;
     }
-
+    delayTail->next = *signal;
     *signal = delayedSignal;
 }
 
@@ -339,6 +342,8 @@ void scanld2SY(int (*function)(int, int, int), int initial, struct Signal *input
 //           -> Signal c -> Signal d -> Signal a
 // scanld3SY f mem xs ys zs = s'
 //   where s' = delaySY mem $ zipWith4SY f s' xs ys zs
+
+// TODO: implement scanld3SY
 
 // Moore state machine function with two input signals
 void moore2SY(void (*nextState)(int *, int, int), void (*output)(int *, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
@@ -681,6 +686,9 @@ void holdSY(int defaultValue, struct Signal *inputSignal, struct Signal **output
         inputSignal = inputSignal->next->next;
     }
 }
+
+
+
 ///////////////////////////
 /* Synchronous Processes */
 ///////////////////////////
