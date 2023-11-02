@@ -5,6 +5,7 @@ open Ast
 open Lexing
 open Printf
 open Hybrid_ir
+open C_maker
 
 let print_position out_channel lexbuf =
   let pos = lexbuf.lex_curr_p in
@@ -30,7 +31,11 @@ let parse_with_error lexbuf =
   in
   print_endline ("Making hybrid IR is done");
   print_endline ("Hybrid IR is: ");
-  print_endline (pprint_hybrid_ir res2)
+  print_endline (pprint_hybrid_ir res2);
+  print_endline ("Making C code...");
+  let res3 = make_c_code res2
+  in
+  print_endline ("Making C code is done")
 
 let () =
   print_endline "Welcome to the ForSyDe IO to C compiler!";

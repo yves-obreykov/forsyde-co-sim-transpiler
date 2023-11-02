@@ -14,8 +14,8 @@ and ir_param =
   | IRParamLeaf of string * value list
   | IRParamNode of string * param list
 
-and ir_IO_nr = (* number of inputs and outputs of an actor*)
-  | IRActorIOnr of int * int
+and ir_IO_nr = (* number of inputs, outputs, list of input tokens, list of output tokens *)
+  | IRActorIOnr of int * int * value list * value list * string list * string list * value list
 
 and ir_edge = 
   | IREdge of attr list * signal * port option * signal * port option
@@ -27,17 +27,34 @@ let rec nr_of_IO = function
   | ParamNode(_,_)::tl -> 0 + nr_of_IO tl
   | [] -> 0
 
-let rec ident_i_o (i, o) = function
-  | ParamNode("production", paraml)::tl -> ident_i_o (i, o + nr_of_IO paraml) tl
-  | ParamNode("consumption", paraml)::tl -> ident_i_o (i + nr_of_IO paraml, o) tl
-  | ParamNode(name, paraml)::tl -> ident_i_o (i, o) tl
-  | ParamLeaf(name, value)::tl -> ident_i_o (i, o) tl
-  | [] -> IRActorIOnr(i, o)
+let rec get_prod_cons_tokens_list acc = function
+  | ParamLeaf(name, value)::tl -> get_prod_cons_tokens_list (List.append value acc) tl
+  | ParamNode(_,_)::tl -> get_prod_cons_tokens_list acc tl
+  | [] -> List.rev acc
+
+let rec get_prod_cons_signals_list acc = function
+  | ParamLeaf(name, value)::tl -> get_prod_cons_signals_list (name::acc) tl
+  | ParamNode(_,_)::tl -> get_prod_cons_signals_list acc tl
+  | [] -> List.rev acc
+
+let rec ident_i_o (i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code) = function
+  | ParamNode("production", paraml)::tl -> 
+    ident_i_o (i, o + nr_of_IO paraml, (get_prod_cons_tokens_list prod_no_tokens_list paraml), cons_no_tokens_list, (get_prod_cons_signals_list prod_signals_list paraml), cons_signals_list, inlined_code) tl
+  | ParamNode("consumption", paraml)::tl -> 
+    ident_i_o (i + nr_of_IO paraml, o, prod_no_tokens_list, (get_prod_cons_tokens_list cons_no_tokens_list paraml), prod_signals_list, (get_prod_cons_signals_list cons_signals_list paraml), inlined_code) tl
+  | ParamNode(name, paraml)::tl -> 
+    ident_i_o (i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code) tl
+  | ParamLeaf("inlinedCode", value)::tl -> 
+    ident_i_o (i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, (List.append value inlined_code)) tl
+  | ParamLeaf(name, value)::tl -> 
+    ident_i_o (i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code) tl
+  | [] -> 
+    IRActorIOnr(i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code)
 
 let rec ident_vertex_type name attrl signall paraml = 
   match attrl with
   | AttributeThree("moc", "sdf", "SDFActor")::attr_tl 
-    -> IRSDFActor(name, attr_tl, signall, paraml, (ident_i_o (0, 0) paraml)) 
+    -> IRSDFActor(name, attr_tl, signall, paraml, (ident_i_o (0, 0, [], [], [], [], []) paraml)) 
   | AttributeThree("moc", "sdf", "SDFChannel")::attr_tl 
     -> IRSDFChannel(name, attr_tl, signall, paraml)
   | AttributeOne(value)::attr_tl
@@ -64,9 +81,6 @@ let rec make_hybrid_ir = function
 
 
 (* pretty print IR *)
-let pprint_io = function
-  | IRActorIOnr(i, o) -> "IRActorIOnr(in=" ^ string_of_int i ^ ", out=" ^ string_of_int o ^ ")"
-
 let rec pprint_value_list = function
   | [] -> ""
   | Value(s)::tl -> s ^ "\n" ^ pprint_value_list tl
@@ -79,6 +93,15 @@ let rec pprint_ir_param_list = function
 let rec pprint_ir_signal_list = function
   | [] -> ""
   | Signal(name)::tl -> name ^ ", " ^ pprint_ir_signal_list tl
+
+let rec pprint_string_list = function
+  | [] -> ""
+  | [s] -> s
+  | s::tl -> s ^ ", " ^ pprint_string_list tl
+
+let pprint_io = function
+  | IRActorIOnr(i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code) ->
+    "inputs = " ^ string_of_int i ^ "\noutputs = " ^ string_of_int o ^ "\nproduction_tokens = " ^ pprint_value_list prod_no_tokens_list ^ "\nconsumption_tokens = " ^ pprint_value_list cons_no_tokens_list ^ "\nproduction_signals = " ^ pprint_string_list prod_signals_list ^ "\nconsumption_signals = " ^ pprint_string_list cons_signals_list ^ "\ninlined_code = " ^ pprint_value_list inlined_code ^ "\n"
 
 let rec pprint_ir_attr_list = function 
   | [] -> ""
