@@ -68,6 +68,16 @@ attr:
     { AttributeTwo(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2)) }
   | s1 = CHAR* COLON COLON s2 = CHAR* COLON COLON s3 = CHAR*
     { AttributeThree(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2) , String.of_seq (List.to_seq s3)) }
+  | s1 = CHAR* COLON COLON s2 = CHAR* COLON COLON s3 = CHAR* COLON COLON s4 = CHAR*
+    { AttributeFour(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2) , String.of_seq (List.to_seq s3) , String.of_seq (List.to_seq s4)) }
+  | s1 = CHAR* COLON COLON s2 = CHAR* COLON COLON s3 = CHAR* COLON COLON s4 = CHAR* COLON COLON s5 = CHAR*
+    { AttributeFive(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2) , String.of_seq (List.to_seq s3) , String.of_seq (List.to_seq s4) , String.of_seq (List.to_seq s5)) }
+  | s1 = CHAR* COLON COLON s2 = CHAR* COLON COLON s3 = CHAR* COLON COLON s4 = CHAR* COLON COLON s5 = CHAR* COLON COLON s6 = CHAR*
+    { AttributeSix(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2) , String.of_seq (List.to_seq s3) , String.of_seq (List.to_seq s4) , String.of_seq (List.to_seq s5) , String.of_seq (List.to_seq s6)) }
+  | s1 = CHAR* COLON COLON s2 = CHAR* COLON COLON s3 = CHAR* COLON COLON s4 = CHAR* COLON COLON s5 = CHAR* COLON COLON s6 = CHAR* COLON COLON s7 = CHAR*
+    { AttributeSeven(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2) , String.of_seq (List.to_seq s3) , String.of_seq (List.to_seq s4) , String.of_seq (List.to_seq s5) , String.of_seq (List.to_seq s6) , String.of_seq (List.to_seq s7)) }
+  | s1 = CHAR* COLON COLON s2 = CHAR* COLON COLON s3 = CHAR* COLON COLON s4 = CHAR* COLON COLON s5 = CHAR* COLON COLON s6 = CHAR* COLON COLON s7 = CHAR* COLON COLON s8 = CHAR*
+    { AttributeEight(String.of_seq (List.to_seq s1) , String.of_seq (List.to_seq s2) , String.of_seq (List.to_seq s3) , String.of_seq (List.to_seq s4) , String.of_seq (List.to_seq s5) , String.of_seq (List.to_seq s6) , String.of_seq (List.to_seq s7) , String.of_seq (List.to_seq s8)) }
 
 signal_list:
   | sl = separated_list(COMMA, signal)
@@ -93,6 +103,8 @@ param:
   | k = STRING COLON v = value
     { ParamLeaf(k, [v]) }
   | k = STRING COLON "[" vl = value_list "]"
+    { ParamLeaf(k, vl) }
+  | k = STRING COLON "[" "[" vl = value_list "]" "]"
     { ParamLeaf(k, vl) }
   | k = STRING COLON "[" p = param_list "]"
     { ParamNode(k, p) }

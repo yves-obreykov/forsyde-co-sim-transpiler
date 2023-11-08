@@ -65,7 +65,7 @@ systemgraph {
             "s4": 1_i,
             "sout": 3_i
         },
-        "inlinedCode": "out1[0] = in1[0]; out1[1] = in1[0] + 1; out1[2] = in1[0] + 2; out2[0] = in1[0];"
+        "inlinedCode": "out2[0] = in1[0]; out2[1] = in1[0] + 1; out2[2] = in1[0] + 2; out1[0] = in1[0];"
     }
 
     vertex p5 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s4, s5) {

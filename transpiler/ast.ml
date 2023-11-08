@@ -9,6 +9,11 @@ and attr =
   | AttributeOne of string
   | AttributeTwo of string * string
   | AttributeThree of string * string * string
+  | AttributeFour of string * string * string * string
+  | AttributeFive of string * string * string * string * string
+  | AttributeSix of string * string * string * string * string * string
+  | AttributeSeven of string * string * string * string * string * string * string
+  | AttributeEight of string * string * string * string * string * string * string * string
 
 and signal =
   | Signal of string
@@ -38,6 +43,11 @@ let pprint_systemgraph = function
           | AttributeOne(name)::tl -> name ^ "\n" ^ pprint_attr_list tl
           | AttributeTwo(name, value)::tl -> name ^ " = " ^ value ^ "\n" ^ pprint_attr_list tl
           | AttributeThree(name, value1, value2)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ "\n" ^ pprint_attr_list tl
+          | AttributeFour(name, value1, value2, value3)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ "\n" ^ pprint_attr_list tl
+          | AttributeFive(name, value1, value2, value3, value4)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ "\n" ^ pprint_attr_list tl
+          | AttributeSix(name, value1, value2, value3, value4, value5)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ "\n" ^ pprint_attr_list tl
+          | AttributeSeven(name, value1, value2, value3, value4, value5, value6)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ ", " ^ value6 ^ "\n" ^ pprint_attr_list tl
+          | AttributeEight(name, value1, value2, value3, value4, value5, value6, value7)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ ", " ^ value6 ^ ", " ^ value7 ^ "\n" ^ pprint_attr_list tl
         in
         let rec pprint_signal_list = function
           | [] -> ""
@@ -60,6 +70,11 @@ let pprint_systemgraph = function
           | AttributeOne(name)::tl -> name ^ "\n" ^ pprint_attr_list tl
           | AttributeTwo(name, value)::tl -> name ^ " = " ^ value ^ "\n" ^ pprint_attr_list tl
           | AttributeThree(name, value1, value2)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ "\n" ^ pprint_attr_list tl
+          | AttributeFour(name, value1, value2, value3)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ "\n" ^ pprint_attr_list tl
+          | AttributeFive(name, value1, value2, value3, value4)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ "\n" ^ pprint_attr_list tl
+          | AttributeSix(name, value1, value2, value3, value4, value5)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ "\n" ^ pprint_attr_list tl
+          | AttributeSeven(name, value1, value2, value3, value4, value5, value6)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ ", " ^ value6 ^ "\n" ^ pprint_attr_list tl
+          | AttributeEight(name, value1, value2, value3, value4, value5, value6, value7)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ ", " ^ value6 ^ ", " ^ value7 ^ "\n" ^ pprint_attr_list tl
         in
         let pprint_signal = function
           | Signal(name) -> name
@@ -73,3 +88,37 @@ let pprint_systemgraph = function
     pprint_vertex_list vl ^ pprint_edge_list el
   | None -> "No systemgraph found\n"
 
+
+(* Find "superLoopEntries" in vertex "os0" *)
+let find_super_loop = function
+| Some Systemgraph(vl, el) ->
+  let rec find_super_loop_vertex = function
+    | [] -> None
+    | Vertex(name, attrl, signall, paraml)::tl ->
+      if name = "os0" then
+        let rec find_super_loop_param = function
+          | [] -> None
+          | ParamLeaf(name, valuel)::tl ->
+              (find_super_loop_param tl)
+          | ParamNode(name, paraml)::tl ->
+            if name = "superLoopEntries" then
+              (Some paraml)
+            else
+              (find_super_loop_param tl)
+        in
+        find_super_loop_param paraml
+      else
+        find_super_loop_vertex tl
+  in
+  let res = find_super_loop_vertex vl
+  in
+  (match res with
+  | Some vl ->
+    let rec pprint_param_list = function
+      | [] -> []
+      | ParamLeaf(name, valuel)::tl -> name :: pprint_param_list tl
+      | ParamNode(name, paraml)::tl -> pprint_param_list tl
+    in
+    pprint_param_list vl
+  | None -> [])
+| None -> []

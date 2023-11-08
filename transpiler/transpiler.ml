@@ -12,7 +12,7 @@ let print_position out_channel lexbuf =
   fprintf out_channel "%s:%d:%d" 
          pos.pos_fname pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
-let parse_with_error lexbuf =
+let parse_with_error lexbuf sequence =
   let res =
     try
       Parser.main Lexer.read lexbuf
@@ -33,9 +33,25 @@ let parse_with_error lexbuf =
   print_endline ("Hybrid IR is: ");
   print_endline (pprint_hybrid_ir res2);
   print_endline ("Making C code...");
-  let res3 = make_c_code res2
-  in
+  make_c_code sequence res2;
   print_endline ("Making C code is done")
+
+
+let rec find_sequence lexbuf =
+  let res =
+    try
+      Parser.main Lexer.read lexbuf
+    with
+    | SyntaxError msg ->
+      fprintf stderr "%a: %s\n" print_position lexbuf msg; None
+    | Parser.Error -> 
+      fprintf stderr "%a: syntax error\n" print_position lexbuf;
+      exit (-1)
+  in
+  find_super_loop res
+  
+
+
 
 let () =
   print_endline "Welcome to the ForSyDe IO to C compiler!";
@@ -47,5 +63,19 @@ let () =
   let lexbuf = Lexing.from_channel in_channel in
   lexbuf.lex_curr_p <- 
     { lexbuf.lex_curr_p with pos_fname = filename };
-  parse_with_error lexbuf;
+
+  let filename2 = Sys.argv.(2) in
+  print_endline "The solved sequence is in file:";
+  print_endline filename2;
+  print_endline " ";
+  let in_channel2 = Core.In_channel.create filename2 in
+  let lexbuf2 = Lexing.from_channel in_channel2 in
+  lexbuf2.lex_curr_p <- 
+    { lexbuf2.lex_curr_p with pos_fname = filename2 };
+  let sequence = find_sequence lexbuf2 in
+  parse_with_error lexbuf sequence;
+  print_endline "The sequence is:";
+  List.iter print_endline sequence;
   In_channel.close in_channel;
+  In_channel.close in_channel2;
+  

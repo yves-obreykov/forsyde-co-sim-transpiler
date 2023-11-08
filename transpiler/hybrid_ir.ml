@@ -14,7 +14,7 @@ and ir_param =
   | IRParamLeaf of string * value list
   | IRParamNode of string * param list
 
-and ir_IO_nr = (* number of inputs, outputs, list of input tokens, list of output tokens *)
+and ir_IO_nr = (* number of inputs, outputs, list of input tokens, list of output tokens , list of input signals, list of output signals, list of inlined code *)
   | IRActorIOnr of int * int * value list * value list * string list * string list * value list
 
 and ir_edge = 
@@ -63,6 +63,16 @@ let rec ident_vertex_type name attrl signall paraml =
     -> IRUnkownVertex(name, attrl, signall, paraml)
   | AttributeThree(value1, value2, value3)::attr_tl
     -> IRUnkownVertex(name, attrl, signall, paraml)
+  | AttributeFour(value1, value2, value3, value4)::attr_tl
+    -> IRUnkownVertex(name, attrl, signall, paraml)
+  | AttributeFive(value1, value2, value3, value4, value5)::attr_tl
+    -> IRUnkownVertex(name, attrl, signall, paraml)
+  | AttributeSix(value1, value2, value3, value4, value5, value6)::attr_tl
+    -> IRUnkownVertex(name, attrl, signall, paraml)
+  | AttributeSeven(value1, value2, value3, value4, value5, value6, value7)::attr_tl
+    -> IRUnkownVertex(name, attrl, signall, paraml)
+  | AttributeEight(value1, value2, value3, value4, value5, value6, value7, value8)::attr_tl
+    -> IRUnkownVertex(name, attrl, signall, paraml)
   | _ -> failwith "There is an attribute that has not been implemented yet."
 
 let rec make_ir_edge_list = function
@@ -108,6 +118,11 @@ let rec pprint_ir_attr_list = function
   | AttributeOne(name)::tl -> name ^ "\n" ^ pprint_ir_attr_list tl
   | AttributeTwo(name, value)::tl -> name ^ " = " ^ value ^ "\n" ^ pprint_ir_attr_list tl
   | AttributeThree(name, value1, value2)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ "\n" ^ pprint_ir_attr_list tl
+  | AttributeFour(name, value1, value2, value3)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ "\n" ^ pprint_ir_attr_list tl
+  | AttributeFive(name, value1, value2, value3, value4)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ "\n" ^ pprint_ir_attr_list tl
+  | AttributeSix(name, value1, value2, value3, value4, value5)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ "\n" ^ pprint_ir_attr_list tl
+  | AttributeSeven(name, value1, value2, value3, value4, value5, value6)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ ", " ^ value6 ^ "\n" ^ pprint_ir_attr_list tl
+  | AttributeEight(name, value1, value2, value3, value4, value5, value6, value7)::tl -> name ^ " = " ^ value1 ^ ", " ^ value2 ^ ", " ^ value3 ^ ", " ^ value4 ^ ", " ^ value5 ^ ", " ^ value6 ^ ", " ^ value7 ^ "\n" ^ pprint_ir_attr_list tl
 
 let rec pprint_ir_vertex_list = function
   | IRSDFActor(name, attrl, signall, paraml, io)::tl 
