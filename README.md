@@ -3,7 +3,20 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 
 # Current status: Takes an .fiodl input file, prints AST and IR to terminal, makes a C file called "output.c"
 
-# Steps to execute
+# Steps to install OCaml on your system
+1. Use the graphical installation from https://fdopen.github.io/opam-repository-mingw/installation/ 
+2. Install the VSCode extension and follow its instructions https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform
+3. Add this to your settings.json of vscode to open a terminal which has ocaml available
+ "terminal.integrated.profiles.windows": {
+        "Cygwin": {
+        "path": "D:/OCaml64/Cygwin.bat",
+        "args": ["-"]
+        }
+    } 
+4. It is recommended that you execute the following steps using this newly installed "Cygwin" terminal inside VSCode
+
+
+# Steps to build and run the compiler for a toy SDF example
 1. go to transpiler directory
 2. run "make"
 3. run "./transpiler ../fiodl-files/toy_sdf_small_cycle_extended.fiodl ../fiodl-files/body_0_ForSyDeDesignModel_Orchestrator.txt"
