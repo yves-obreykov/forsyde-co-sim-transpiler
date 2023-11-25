@@ -122,3 +122,41 @@ let find_super_loop = function
     pprint_param_list vl
   | None -> [])
 | None -> []
+
+
+(* Find vertices with the attribute "forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel" *)
+let find_sdf_channel_sizes = function
+| Some Systemgraph(vl, el) ->
+  let rec find_sdf_channels_vertex = function
+    | [] -> []
+    | Vertex(name, attrl, signall, paraml)::tl ->
+      let rec find_sdf_channels_attr = function
+        | [] -> false
+        | AttributeOne(name)::tl -> find_sdf_channels_attr tl
+        | AttributeTwo(name, value)::tl -> find_sdf_channels_attr tl
+        | AttributeThree(name, value1, value2)::tl -> find_sdf_channels_attr tl
+        | AttributeFour(name, value1, value2, value3)::tl -> find_sdf_channels_attr tl
+        | AttributeFive(name, value1, value2, value3, value4)::tl -> find_sdf_channels_attr tl
+        | AttributeSix(name, value1, value2, value3, value4, value5)::tl -> find_sdf_channels_attr tl
+        | AttributeSeven(name, value1, value2, value3, value4, value5, value6)::tl -> find_sdf_channels_attr tl
+        | AttributeEight(name, value1, value2, value3, value4, value5, value6, value7)::tl -> 
+          if value7 = "SDFChannel" then
+            true
+          else
+            find_sdf_channels_attr tl
+      in
+      if find_sdf_channels_attr attrl then
+        let rec find_sdf_channels_param = function
+          | [] -> None
+          | ParamLeaf("maxElements", [Value(s)])::ptl -> Some s
+          | ParamLeaf(name, valuel)::ptl -> find_sdf_channels_param ptl
+          | ParamNode(name, paraml)::ptl -> find_sdf_channels_param ptl
+        in
+        (match find_sdf_channels_param paraml with
+        | Some s -> (name ^ " = " ^ s) :: find_sdf_channels_vertex tl
+        | None -> find_sdf_channels_vertex tl)
+      else
+        find_sdf_channels_vertex tl
+  in
+  find_sdf_channels_vertex vl
+| None -> []

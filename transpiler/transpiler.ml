@@ -12,7 +12,7 @@ let print_position out_channel lexbuf =
   fprintf out_channel "%s:%d:%d" 
          pos.pos_fname pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
-let parse_with_error lexbuf sequence =
+let parse_with_error lexbuf sequence sizes =
   let res =
     try
       Parser.main Lexer.read lexbuf
@@ -33,7 +33,7 @@ let parse_with_error lexbuf sequence =
   print_endline ("Hybrid IR is: ");
   print_endline (pprint_hybrid_ir res2);
   print_endline ("Making C code...");
-  make_c_code sequence res2;
+  make_c_code sequence sizes res2;
   print_endline ("Making C code is done")
 
 
@@ -48,7 +48,7 @@ let rec find_sequence lexbuf =
       fprintf stderr "%a: syntax error\n" print_position lexbuf;
       exit (-1)
   in
-  find_super_loop res
+  (find_super_loop res, find_sdf_channel_sizes res) 
   
 
 
@@ -72,10 +72,12 @@ let () =
   let lexbuf2 = Lexing.from_channel in_channel2 in
   lexbuf2.lex_curr_p <- 
     { lexbuf2.lex_curr_p with pos_fname = filename2 };
-  let sequence = find_sequence lexbuf2 in
-  parse_with_error lexbuf sequence;
+  let (sequence, sizes) = find_sequence lexbuf2 in
+  parse_with_error lexbuf sequence sizes;
   print_endline "The sequence is:";
   List.iter print_endline sequence;
+  print_endline "The channel sizes are:";
+  List.iter print_endline sizes;
   In_channel.close in_channel;
   In_channel.close in_channel2;
   

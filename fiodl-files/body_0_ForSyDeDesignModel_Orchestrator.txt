@@ -1,6 +1,6 @@
 systemgraph {
   vertex "p1"
-  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (combFunctions, mappingHost, p1_s1, p1_s6, p1_sin, runtimeHost)
   {
     "computationalRequirements": {
@@ -22,7 +22,7 @@ systemgraph {
     "setThroughputInSecsNumerator": 3029959291710759_l
   }
   vertex "p2"
-  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (combFunctions, mappingHost, p2_s1, p2_s2, p2_s3, runtimeHost)
   {
     "computationalRequirements": {
@@ -44,7 +44,7 @@ systemgraph {
     "setThroughputInSecsNumerator": 3029959291710759_l
   }
   vertex "p3"
-  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (combFunctions, mappingHost, p3_s3, p3_s5, p3_s6, runtimeHost)
   {
     "computationalRequirements": {
@@ -66,7 +66,7 @@ systemgraph {
     "setThroughputInSecsNumerator": 3029959291710759_l
   }
   vertex "p4"
-  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (combFunctions, mappingHost, p4_s2, p4_s4, p4_sout, runtimeHost)
   {
     "computationalRequirements": {
@@ -88,7 +88,7 @@ systemgraph {
     "setThroughputInSecsNumerator": 3029959291710759_l
   }
   vertex "p5"
-  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (combFunctions, mappingHost, p5_s4, p5_s5, runtimeHost)
   {
     "computationalRequirements": {
@@ -109,48 +109,78 @@ systemgraph {
     "setThroughputInSecsNumerator": 3029959291710759_l
   }
   vertex "chS1"
-  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (consumer, mappingHost, producer, tokenDataType)
   {
+    "maxSizeInBits": {},
     "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
     "numInitialTokens": 0_i
   }
   vertex "chS2"
-  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (consumer, mappingHost, producer, tokenDataType)
   {
+    "maxSizeInBits": {},
     "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
     "numInitialTokens": 0_i
   }
   vertex "chS3"
-  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (consumer, mappingHost, producer, tokenDataType)
   {
+    "maxSizeInBits": {},
     "elementSizeInBits": 0_l,
+    "maxElements": 2_i,
     "numInitialTokens": 0_i
   }
   vertex "chS4"
-  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (consumer, mappingHost, producer, tokenDataType)
   {
+    "maxSizeInBits": {},
     "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
     "numInitialTokens": 0_i
   }
   vertex "chS5"
-  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (consumer, mappingHost, producer, tokenDataType)
   {
+    "maxSizeInBits": {},
     "elementSizeInBits": 0_l,
+    "maxElements": 2_i,
     "numInitialTokens": 0_i
   }
   vertex "chS6"
-  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
   (consumer, producer, tokenDataType)
   {
+    "maxSizeInBits": {},
     "elementSizeInBits": 0_l,
+    "maxElements": 2_i,
     "numInitialTokens": 2_i
   }
-  vertex "tile0./memory"
+  vertex "chSin"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 2_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "chSout"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 3_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "0.dts/memory"
   [forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericMemoryModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
   ()
   {
@@ -172,7 +202,7 @@ systemgraph {
       "p3"
     ]
   }
-  vertex "tile0./devicebus"
+  vertex "0.dts/devicebus"
   [forsyde::io::lib::hierarchy::decision::ConcurrentSlotsReserved, forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericCommunicationModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
   ()
   {
@@ -213,19 +243,19 @@ systemgraph {
   edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "p5" port "p5_s5" to "chS5" port "producer"
   edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "chS5" port "consumer" to "p3" port "p3_s5"
   edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "chS6" port "consumer" to "p1" port "p1_s6"
-  edge [] from "p1" port "mappingHost" to "tile0./memory" 
+  edge [] from "p1" port "mappingHost" to "0.dts/memory" 
   edge [] from "p1" port "runtimeHost" to "os0" 
-  edge [] from "p2" port "mappingHost" to "tile0./memory" 
+  edge [] from "p2" port "mappingHost" to "0.dts/memory" 
   edge [] from "p2" port "runtimeHost" to "os0" 
-  edge [] from "p3" port "mappingHost" to "tile0./memory" 
+  edge [] from "p3" port "mappingHost" to "0.dts/memory" 
   edge [] from "p3" port "runtimeHost" to "os0" 
-  edge [] from "p4" port "mappingHost" to "tile0./memory" 
+  edge [] from "p4" port "mappingHost" to "0.dts/memory" 
   edge [] from "p4" port "runtimeHost" to "os0" 
-  edge [] from "p5" port "mappingHost" to "tile0./memory" 
+  edge [] from "p5" port "mappingHost" to "0.dts/memory" 
   edge [] from "p5" port "runtimeHost" to "os0" 
-  edge [] from "chS1" port "mappingHost" to "tile0./memory" 
-  edge [] from "chS2" port "mappingHost" to "tile0./memory" 
-  edge [] from "chS3" port "mappingHost" to "tile0./memory" 
-  edge [] from "chS4" port "mappingHost" to "tile0./memory" 
-  edge [] from "chS5" port "mappingHost" to "tile0./memory" 
+  edge [] from "chS1" port "mappingHost" to "0.dts/memory" 
+  edge [] from "chS2" port "mappingHost" to "0.dts/memory" 
+  edge [] from "chS3" port "mappingHost" to "0.dts/memory" 
+  edge [] from "chS4" port "mappingHost" to "0.dts/memory" 
+  edge [] from "chS5" port "mappingHost" to "0.dts/memory" 
 }

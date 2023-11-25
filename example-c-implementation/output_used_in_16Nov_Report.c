@@ -30,40 +30,52 @@ void f_p3(token* in1, token* in2, token* out1){
 int main(){
 	token input;
 	token output;
-	token* buffer_sin = malloc(2 * sizeof(token));
-	channel sin = createFIFO(buffer_sin, 2);
+	token* buffer_sin = malloc(10 * sizeof(token));
+	channel sin = createFIFO(buffer_sin, 10);
 
-	token* buffer_s1 = malloc(1 * sizeof(token));
-	channel s1 = createFIFO(buffer_s1, 1);
+	token* buffer_s1 = malloc(3 * sizeof(token));
+	channel s1 = createFIFO(buffer_s1, 3);
 
-	token* buffer_s2 = malloc(1 * sizeof(token));
-	channel s2 = createFIFO(buffer_s2, 1);
+	token* buffer_s2 = malloc(3 * sizeof(token));
+	channel s2 = createFIFO(buffer_s2, 3);
 
-	token* buffer_s3 = malloc(2 * sizeof(token));
-	channel s3 = createFIFO(buffer_s3, 2);
+	token* buffer_s3 = malloc(3 * sizeof(token));
+	channel s3 = createFIFO(buffer_s3, 3);
 
-	token* buffer_s4 = malloc(1 * sizeof(token));
-	channel s4 = createFIFO(buffer_s4, 1);
+	token* buffer_s4 = malloc(3 * sizeof(token));
+	channel s4 = createFIFO(buffer_s4, 3);
 
-	token* buffer_s5 = malloc(2 * sizeof(token));
-	channel s5 = createFIFO(buffer_s5, 2);
+	token* buffer_s5 = malloc(3 * sizeof(token));
+	channel s5 = createFIFO(buffer_s5, 3);
 
-	token* buffer_s6 = malloc(2 * sizeof(token));
-	channel s6 = createFIFO(buffer_s6, 2);
+	token* buffer_s6 = malloc(3 * sizeof(token));
+	channel s6 = createFIFO(buffer_s6, 3);
 	/*Initial tokens for s6*/
 	writeToken(s6, 0);
 	writeToken(s6, 0);
 
+	writeToken(sin, 1);
+	writeToken(sin, 2);
+	writeToken(sin, 3);
+	writeToken(sin, 4);
+	writeToken(sin, 5);
+	writeToken(sin, 6);
+	writeToken(sin, 7);
+	writeToken(sin, 8);
+	writeToken(sin, 9);
+	writeToken(sin, 10);
+
 	token* buffer_sout = malloc(3 * sizeof(token));
 	channel sout = createFIFO(buffer_sout, 3);
 
-	while(1){
+	// while(1){
+	for(int i = 0; i < 3; i++){
 
-	printf("Read 2 input tokens: ");
-	for(int j = 0; j <2; j++) {
-		scanf("%d", &input);
-		writeToken(sin, input);
-	}
+	// printf("Read 2 input tokens: ");
+	// for(int j = 0; j <2; j++) {
+	// 	scanf("%d", &input);
+	// 	writeToken(sin, input);
+	// }
 
 	/* Actor p1 */
 	actor21SDF(2,1, 1, &sin, &s6, &s1, f_p1);
@@ -83,11 +95,11 @@ int main(){
 	/* Actor p5 */
 	actor11SDF(1, 1, &s4, &s5, f_p5);
 
-	printf("Read 2 input tokens: ");
-	for(int j = 0; j <2; j++) {
-		scanf("%d", &input);
-		writeToken(sin, input);
-	}
+	// printf("Read 2 input tokens: ");
+	// for(int j = 0; j <2; j++) {
+	// 	scanf("%d", &input);
+	// 	writeToken(sin, input);
+	// }
 
 	/* Actor p1 */
 	actor21SDF(2,1, 1, &sin, &s6, &s1, f_p1);
