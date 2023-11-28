@@ -8,6 +8,14 @@ struct Signal
     struct Signal *next;
 };
 
+// Defina a Vector of Signal structure
+struct Vector 
+{
+    struct Signal *signal;
+    struct Vector *next;
+};
+
+
 ////////////////////////////////////////
 /* Combinational process constructors */
 ////////////////////////////////////////
@@ -18,11 +26,30 @@ struct Signal
 // mapSY f (x:-xs) = f x :- (mapSY f xs)
 
 // Function to map a void function over a Signal, modifying the values in place
-void mapSY(void (*function)(int *), struct Signal *signal)
+void mapSY(int (*function)(int), struct Signal *signal, struct Signal **result)
 {
+    struct Signal *currentResult = NULL;
+
     while (signal != NULL)
     {
-        function(&(signal->data));
+        int data = signal->data;
+        int resultData = function(data);
+
+        if (*result == NULL)
+        {
+            *result = (struct Signal *)malloc(sizeof(struct Signal));
+            (*result)->data = resultData;
+            (*result)->next = NULL;
+            currentResult = *result;
+        }
+        else
+        {
+            currentResult->next = (struct Signal *)malloc(sizeof(struct Signal));
+            currentResult = currentResult->next;
+            currentResult->data = resultData;
+            currentResult->next = NULL;
+        }
+
         signal = signal->next;
     }
 }
@@ -149,11 +176,18 @@ void zipWith4SY(int (*function)(int, int, int, int), struct Signal *signal1, str
 }
 
 // TODO: implement mapxSY zipWithxSY
+// -- | The process constructor 'mapxSY' creates a process network that
+// -- maps a function onto all signals in a vector of signals. See 'mapV'.
+// --
+// mapxSY :: (a -> b) -> Vector (Signal a) -> Vector (Signal b)
+// mapxSY f = mapV (mapSY f)
+
+
 
 // The process constructor combSY is an alias to mapSY and behaves exactly in the same way.
-void combSY(int (*function)(int), struct Signal *signal)
+void combSY(int (*function)(int), struct Signal *signal, struct Signal **result)
 {
-    mapSY(function, signal);
+    mapSY(function, signal, result);
 }
 
 // The process constructor comb2SY is an alias to zipWithSY and behaves exactly in the same way.
@@ -189,6 +223,12 @@ void comb4SY(int (*function)(int, int, int, int), struct Signal *signal1, struct
 void delaySY(int initial, struct Signal **signal)
 {
     struct Signal *newNode = (struct Signal *)malloc(sizeof(struct Signal));
+    if (*signal == NULL)
+    {   // in case signal is empty
+        *signal = newNode;
+        return;
+    }
+    
     newNode->data = initial;
     newNode->next = *signal;
     *signal = newNode;
@@ -242,12 +282,28 @@ void delaynSY(int initial, int delayCycles, struct Signal **signal)
 // Function to perform scanlSY operation
 void scanlSY(int (*function)(int, int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
 {
-    struct Signal *accumulator = NULL; // Initialize an empty accumulator
+    // N.B. The implementation is not strictly the same as the Shallow implementation
+    struct Signal *accumulator; // Initialize an accumulator
 
     while (inputSignal != NULL)
     {
-        delaySY(initial, &accumulator);                              // Delay the current accumulator
-        zipWithSY(function, accumulator, inputSignal, outputSignal); // Apply the function and update the output signal
+        initial = (*function)(initial, inputSignal->data);
+        
+        if (*outputSignal == NULL)
+        {
+            *outputSignal = (struct Signal *)malloc(sizeof(struct Signal));
+            (*outputSignal)->data = initial;
+            (*outputSignal)->next = NULL;
+            accumulator = *outputSignal;
+        } 
+        else 
+        {
+            accumulator->next = (struct Signal *)malloc(sizeof(struct Signal));
+            accumulator = accumulator->next;
+            accumulator->data = initial;
+            accumulator->next = NULL;
+        }
+        
         inputSignal = inputSignal->next;
     }
 }
@@ -260,14 +316,31 @@ void scanlSY(int (*function)(int, int), int initial, struct Signal *inputSignal,
 // Function to perform scanl2SY operation
 void scanl2SY(int (*function)(int, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
 {
-    struct Signal *accumulator = NULL; // Initialize an empty accumulator
+    // N.B. The implementation is not strictly the same as the Shallow implementation
+    struct Signal *accumulator; // Initialize an accumulator
 
     while (inputSignal1 != NULL && inputSignal2 != NULL)
     {
-        delaySY(initial, &accumulator);                                              // Delay the current accumulator
-        zipWith3SY(function, accumulator, inputSignal1, inputSignal2, outputSignal); // Apply the function and update the output signal
+        initial = (*function)(initial, inputSignal1->data, inputSignal2->data);
+        
+        if (*outputSignal == NULL)
+        {
+            *outputSignal = (struct Signal *)malloc(sizeof(struct Signal));
+            (*outputSignal)->data = initial;
+            (*outputSignal)->next = NULL;
+            accumulator = *outputSignal;
+        } 
+        else 
+        {
+            accumulator->next = (struct Signal *)malloc(sizeof(struct Signal));
+            accumulator = accumulator->next;
+            accumulator->data = initial;
+            accumulator->next = NULL;
+        }
+        
         inputSignal1 = inputSignal1->next;
         inputSignal2 = inputSignal2->next;
+
     }
 }
 
@@ -280,12 +353,28 @@ void scanl2SY(int (*function)(int, int, int), int initial, struct Signal *inputS
 // Function to perform scanl3SY operation
 void scanl3SY(int (*function)(int, int, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal *inputSignal3, struct Signal **outputSignal)
 {
-    struct Signal *accumulator = NULL; // Initialize an empty accumulator
+    // N.B. The implementation is not strictly the same as the Shallow implementation
+    struct Signal *accumulator; // Initialize an accumulator
 
     while (inputSignal1 != NULL && inputSignal2 != NULL && inputSignal3 != NULL)
     {
-        delaySY(initial, &accumulator);                                                            // Delay the current accumulator
-        zipWith4SY(function, accumulator, inputSignal1, inputSignal2, inputSignal3, outputSignal); // Apply the function and update the output signal
+        initial = (*function)(initial, inputSignal1->data, inputSignal2->data, inputSignal3->data);
+        
+        if (*outputSignal == NULL)
+        {
+            *outputSignal = (struct Signal *)malloc(sizeof(struct Signal));
+            (*outputSignal)->data = initial;
+            (*outputSignal)->next = NULL;
+            accumulator = *outputSignal;
+        } 
+        else 
+        {
+            accumulator->next = (struct Signal *)malloc(sizeof(struct Signal));
+            accumulator = accumulator->next;
+            accumulator->data = initial;
+            accumulator->next = NULL;
+        }
+        
         inputSignal1 = inputSignal1->next;
         inputSignal2 = inputSignal2->next;
         inputSignal3 = inputSignal3->next;
@@ -302,14 +391,39 @@ void scanl3SY(int (*function)(int, int, int, int), int initial, struct Signal *i
 //      where s' = delaySY mem $ zipWithSY f s' xs
 
 // Function to perform scanldSY operation
+// void scanldSY(int (*function)(int, int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
+// {
+//     struct Signal *sPrime = NULL; // Initialize an empty s'
+
+//     while (inputSignal != NULL)
+//     {
+//         delaySY(initial, &sPrime);                              // Delay s' with the initial value
+//         zipWithSY(function, sPrime, inputSignal, outputSignal); // Apply the function and update the output signal
+//         inputSignal = inputSignal->next;
+//     }
+// }
+
+// testing a new implementation of scanldSY - YVES
 void scanldSY(int (*function)(int, int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
 {
-    struct Signal *sPrime = NULL; // Initialize an empty s'
+    // N.B. The implementation is not strictly the same as the Shallow implementation
+    struct Signal *accumulator; // Initialize an accumulator
+    
+    *outputSignal = (struct Signal *)malloc(sizeof(struct Signal));
+    (*outputSignal)->data = initial;
+    (*outputSignal)->next = NULL;
+    accumulator = *outputSignal;
+
 
     while (inputSignal != NULL)
     {
-        delaySY(initial, &sPrime);                              // Delay s' with the initial value
-        zipWithSY(function, sPrime, inputSignal, outputSignal); // Apply the function and update the output signal
+        initial = (*function)(initial, inputSignal->data);
+        
+        accumulator->next = (struct Signal *)malloc(sizeof(struct Signal));
+        accumulator = accumulator->next;
+        accumulator->data = initial;
+        accumulator->next = NULL;
+            
         inputSignal = inputSignal->next;
     }
 }
@@ -325,12 +439,23 @@ void scanldSY(int (*function)(int, int), int initial, struct Signal *inputSignal
 // Function to perform scanld2SY operation
 void scanld2SY(int (*function)(int, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
 {
-    struct Signal *sPrime = NULL; // Initialize an empty s'
+    // N.B. The implementation is not strictly the same as the Shallow implementation
+    struct Signal *accumulator; // Initialize an accumulator
 
+    *outputSignal = (struct Signal *)malloc(sizeof(struct Signal));
+    (*outputSignal)->data = initial;
+    (*outputSignal)->next = NULL;
+    accumulator = *outputSignal;
+    
     while (inputSignal1 != NULL && inputSignal2 != NULL)
     {
-        delaySY(initial, &sPrime);                                              // Delay s' with the initial value
-        zipWith3SY(function, sPrime, inputSignal1, inputSignal2, outputSignal); // Apply the function and update the output signal
+        initial = (*function)(initial, inputSignal1->data, inputSignal2->data);
+        
+        accumulator->next = (struct Signal *)malloc(sizeof(struct Signal));
+        accumulator = accumulator->next;
+        accumulator->data = initial;
+        accumulator->next = NULL;
+      
         inputSignal1 = inputSignal1->next;
         inputSignal2 = inputSignal2->next;
     }
@@ -343,22 +468,31 @@ void scanld2SY(int (*function)(int, int, int), int initial, struct Signal *input
 // scanld3SY f mem xs ys zs = s'
 //   where s' = delaySY mem $ zipWith4SY f s' xs ys zs
 
-// TODO: implement scanld3SY
-
-// Moore state machine function with two input signals
-void moore2SY(void (*nextState)(int *, int, int), void (*output)(int *, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
+// Function to perform scanld3SY operation
+void scanld3SY(int (*function)(int, int, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal *inputSignal3, struct Signal **outputSignal)
 {
-    struct Signal *accumulator = NULL; // Initialize an empty accumulator
+    // N.B. The implementation is not strictly the same as the Shallow implementation
+    struct Signal *accumulator; // Initialize an accumulator
 
-    while (inputSignal1 != NULL && inputSignal2 != NULL)
+    *outputSignal = (struct Signal *)malloc(sizeof(struct Signal));
+    (*outputSignal)->data = initial;
+    (*outputSignal)->next = NULL;
+    accumulator = *outputSignal;
+    
+    while (inputSignal1 != NULL && inputSignal2 != NULL && inputSignal3 != NULL)
     {
-        delaySY(initial, &accumulator);                                              // Delay the current accumulator
-        scanld2SY(nextState, accumulator, inputSignal1, inputSignal2, outputSignal); // Apply the function and update the output signal
-        mapSY(output, *outputSignal);                                                // Map the output function over the output signal
+        initial = (*function)(initial, inputSignal1->data, inputSignal2->data, inputSignal3->data);
+        
+        accumulator->next = (struct Signal *)malloc(sizeof(struct Signal));
+        accumulator = accumulator->next;
+        accumulator->data = initial;
+        accumulator->next = NULL;
+       
         inputSignal1 = inputSignal1->next;
         inputSignal2 = inputSignal2->next;
+        inputSignal3 = inputSignal3->next;
     }
-}
+} 
 
 // Source code:
 //  mooreSY :: (a -> b -> a) -- ^Combinational function for next state
@@ -371,17 +505,12 @@ void moore2SY(void (*nextState)(int *, int, int), void (*output)(int *, int), in
 //      = mapSY output . (scanldSY nextState initial)
 
 // Moore state machine function
-void mooreSY(void (*nextState)(int *, int), void (*output)(int *, int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
+void mooreSY(int (*nextState)(int, int), int (*output)(int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
 {
     struct Signal *accumulator = NULL; // Initialize an empty accumulator
 
-    while (inputSignal != NULL)
-    {
-        delaySY(initial, &accumulator);                              // Delay the current accumulator
-        scanldSY(nextState, accumulator, inputSignal, outputSignal); // Apply the function and update the output signal
-        mapSY(output, *outputSignal);                                // Map the output function over the output signal
-        inputSignal = inputSignal->next;
-    }
+    scanldSY(nextState, initial, inputSignal, &accumulator); // Apply the function and update the output signal
+    mapSY(output, accumulator, outputSignal);                // Map the output function over the output signal
 }
 
 // Source code:
@@ -391,18 +520,12 @@ void mooreSY(void (*nextState)(int *, int), void (*output)(int *, int), int init
 //    mapSY output (scanld2SY nextState initial inp1 inp2)
 
 // Moore state machine function with two input signals
-void moore2SY(void (*nextState)(int *, int, int), void (*output)(int *, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
+void moore2SY(int (*nextState)(int, int, int), int (*output)(int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
 {
     struct Signal *accumulator = NULL; // Initialize an empty accumulator
 
-    while (inputSignal1 != NULL && inputSignal2 != NULL)
-    {
-        delaySY(initial, &accumulator);                                              // Delay the current accumulator
-        scanld2SY(nextState, accumulator, inputSignal1, inputSignal2, outputSignal); // Apply the function and update the output signal
-        mapSY(output, *outputSignal);                                                // Map the output function over the output signal
-        inputSignal1 = inputSignal1->next;
-        inputSignal2 = inputSignal2->next;
-    }
+    scanld2SY(nextState, initial, inputSignal1, inputSignal2, &accumulator);    // Apply the function and update the output signal
+    mapSY(output, accumulator, outputSignal);                                   // Map the output function over the output signal
 }
 
 // Source code:
@@ -412,19 +535,12 @@ void moore2SY(void (*nextState)(int *, int, int), void (*output)(int *, int), in
 //    mapSY output (scanld3SY nextState initial inp1 inp2 inp3)
 
 // Moore state machine function with three input signals
-void moore3SY(void (*nextState)(int *, int, int, int), void (*output)(int *, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal *inputSignal3, struct Signal **outputSignal)
+void moore3SY(int (*nextState)(int, int, int, int), int (*output)(int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal *inputSignal3, struct Signal **outputSignal)
 {
     struct Signal *accumulator = NULL; // Initialize an empty accumulator
 
-    while (inputSignal1 != NULL && inputSignal2 != NULL && inputSignal3 != NULL)
-    {
-        delaySY(initial, &accumulator);                                                            // Delay the current accumulator
-        scanld3SY(nextState, accumulator, inputSignal1, inputSignal2, inputSignal3, outputSignal); // Apply the function and update the output signal
-        mapSY(output, *outputSignal);                                                              // Map the output function over the output signal
-        inputSignal1 = inputSignal1->next;
-        inputSignal2 = inputSignal2->next;
-        inputSignal3 = inputSignal3->next;
-    }
+    scanld3SY(nextState, initial, inputSignal1, inputSignal2, inputSignal3, &accumulator);  // Apply the function and update the output signal
+    mapSY(output, accumulator, outputSignal);                                               // Map the output function over the output signal
 }
 
 // Source code:
@@ -439,17 +555,12 @@ void moore3SY(void (*nextState)(int *, int, int, int), void (*output)(int *, int
 //    where state = scanldSY nextState initial sig
 
 // Mealy state machine function
-void mealySY(void (*nextState)(int *, int), void (*output)(int *, int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
+void mealySY(int (*nextState)(int, int), int (*output)(int, int), int initial, struct Signal *inputSignal, struct Signal **outputSignal)
 {
-    struct Signal *state = NULL; // Initialize an empty state
+    struct Signal *accumulator = NULL; // Initialize an empty accumulator
 
-    while (inputSignal != NULL)
-    {
-        delaySY(initial, &state);                            // Delay the current state
-        scanldSY(nextState, state, inputSignal, &state);     // Apply the function and update the state
-        zipWithSY(output, state, inputSignal, outputSignal); // Apply the function and update the output signal
-        inputSignal = inputSignal->next;
-    }
+    scanldSY(nextState, initial, inputSignal, &accumulator); // Apply the function and update the output signal
+    zipWithSY(output, accumulator, inputSignal, outputSignal);                // Map the output function over the output signal
 }
 
 // Source code:
@@ -459,18 +570,12 @@ void mealySY(void (*nextState)(int *, int), void (*output)(int *, int), int init
 //    zipWith3SY output (scanld2SY nextState initial inp1 inp2) inp1 inp2
 
 // Mealy state machine function
-void mealy2SY(void (*nextState)(int *, int, int), void (*output)(int *, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
+void mealy2SY(int (*nextState)(int, int, int), int (*output)(int , int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal **outputSignal)
 {
-    struct Signal *state = NULL; // Initialize an empty state
+    struct Signal *accumulator = NULL; // Initialize an empty accumulator
 
-    while (inputSignal1 != NULL && inputSignal2 != NULL)
-    {
-        delaySY(initial, &state);                             // Delay the current state
-        scanldSY(nextState, state, inputSignal1, &state);     // Apply the function and update the state
-        zipWithSY(output, state, inputSignal1, outputSignal); // Apply the function and update the output signal
-        inputSignal1 = inputSignal1->next;
-        inputSignal2 = inputSignal2->next;
-    }
+    scanld2SY(nextState, initial, inputSignal1, inputSignal2, &accumulator); // Apply the function and update the output signal
+    zipWith3SY(output, accumulator, inputSignal1, inputSignal2, outputSignal);                // Map the output function over the output signal
 }
 
 // Source code:
@@ -480,19 +585,12 @@ void mealy2SY(void (*nextState)(int *, int, int), void (*output)(int *, int, int
 //    zipWith4SY output (scanld3SY nextState initial inp1 inp2 inp3) inp1 inp2 inp3
 
 // Mealy state machine function
-void mealy3SY(void (*nextState)(int *, int, int, int), void (*output)(int *, int, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal *inputSignal3, struct Signal **outputSignal)
+void mealy3SY(int (*nextState)(int, int, int, int), int (*output)(int, int, int, int), int initial, struct Signal *inputSignal1, struct Signal *inputSignal2, struct Signal *inputSignal3, struct Signal **outputSignal)
 {
-    struct Signal *state = NULL; // Initialize an empty state
+    struct Signal *accumulator = NULL; // Initialize an empty accumulator
 
-    while (inputSignal1 != NULL && inputSignal2 != NULL && inputSignal3 != NULL)
-    {
-        delaySY(initial, &state);                             // Delay the current state
-        scanldSY(nextState, state, inputSignal1, &state);     // Apply the function and update the state
-        zipWithSY(output, state, inputSignal1, outputSignal); // Apply the function and update the output signal
-        inputSignal1 = inputSignal1->next;
-        inputSignal2 = inputSignal2->next;
-        inputSignal3 = inputSignal3->next;
-    }
+    scanld3SY(nextState, initial, inputSignal1, inputSignal2, inputSignal3, &accumulator); // Apply the function and update the output signal
+    zipWith4SY(output, accumulator, inputSignal1, inputSignal2, inputSignal3, outputSignal);                // Map the output function over the output signal
 }
 
 // Source code:
@@ -1367,4 +1465,150 @@ void sndSY(struct SignalTuple *signal, struct Signal **result)
 
         signal = signal->next;
     }
+}
+
+int incr(int y){
+    return 1 + y;
+}
+
+int dubblera(int x) {
+    return x * 2;
+}
+
+int mult(int x, int y) {
+    return x * y;
+}
+ 
+int add(int x, int y){
+    return x + y;
+}
+
+int add3(int x, int y, int z) {
+    return x + y + z;
+}
+
+int add4(int x, int y, int z, int w) {
+    return x + y + z + w;
+}
+
+void append_to_signal(struct Signal * signal, int appendValue){
+    // create new node
+    struct Signal *new = (struct Signal *)malloc(sizeof(struct Signal));
+    new->data = appendValue;
+    new->next = NULL;
+    // find end of signal
+    while (signal->next != NULL)
+    {
+        signal = signal->next;
+    }
+    // append new node to end of signal
+    signal->next = new;
+}
+
+void printSignal(struct Signal *signal)
+{
+    printf("{");
+    while (signal != NULL)
+    {
+        if (signal->next != NULL)
+        {
+            printf("%d, ", signal->data);
+        } else {
+            printf("%d", signal->data);
+        }
+        signal = signal->next;
+    }
+    printf("}\n");
+}
+
+void freeSignal(struct Signal *signal) 
+{
+    struct Signal * temp = signal;
+    while (signal != NULL)
+    {
+        signal = signal->next;
+        free(temp);
+        temp = signal;
+    }
+}
+
+void printSignalTuple(struct SignalTuple *signal) 
+{
+    printf("{");
+    while (signal != NULL)
+    {
+        if (signal->next != NULL)
+        {
+            printf("(%d,%d), ", signal->data1, signal->data2);
+        } else {
+            printf("(%d,%d)", signal->data1, signal->data2);
+        }
+        signal = signal->next;
+    }
+    printf("}\n");
+}
+void freeSignalTuple(struct SignalTuple *signal)
+{
+    struct SignalTuple * temp = signal;
+    while (signal != NULL)
+    {
+        signal = signal->next;
+        free(temp);
+        temp = signal;
+    }
+}
+
+
+int main () {
+    struct Signal *mySig = (struct Signal *)malloc(sizeof(struct Signal));
+    mySig->next = NULL;
+    mySig->data = 1;
+
+    struct Signal *mySig2 = (struct Signal *)malloc(sizeof(struct Signal));
+    mySig2->next = NULL;
+    mySig2->data = -1;
+    append_to_signal(mySig2, 2);
+    append_to_signal(mySig2, 3);
+
+    struct Signal *mySig3 = (struct Signal *)malloc(sizeof(struct Signal));
+    mySig3->next = NULL;
+    mySig3->data = 1;
+
+    for (int i = 2; i < 6; i++)
+    {
+        append_to_signal(mySig, i);
+        append_to_signal(mySig2, (i+2));
+        append_to_signal(mySig3, i);
+    }
+
+    // struct Signal *output = NULL;
+    // struct SignalTuple *output = NULL;
+    struct Signal *out1 = NULL;
+    struct Signal *out2 = NULL;
+
+    sourceSY(incr, 0, &out1);
+
+    struct Signal * current = mySig;
+    printSignal(mySig);
+    freeSignal(mySig);
+
+    printSignal(mySig2);
+    freeSignal(mySig2);
+    
+    // printSignal(mySig3);
+    freeSignal(mySig3);
+
+    // printSignal(output);
+    // freeSignal(output);
+
+    // printSignalTuple(output);
+    // freeSignalTuple(output);
+
+    printSignal(out1);
+    freeSignal(out1);
+
+    printSignal(out2);
+    freeSignal(out2);
+
+    return 0;
 }
