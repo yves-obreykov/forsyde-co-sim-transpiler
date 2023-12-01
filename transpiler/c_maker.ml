@@ -3,7 +3,7 @@ open Printf
 
 
 let make_c_header = 
-  "#include \"c-skeletons-for-SDF.c\"\n\n"
+  "#include <pthread.h>\n" ^ "#include \"c-skeletons-for-SDF.c\"\n\n"
 
 let make_c_footer = "\treturn 0;\n}"
 
@@ -51,27 +51,28 @@ let extract_size name sizes =
   in
   find_size name sizes
     
-let rec make_c_actors identified_functions actor_calls buffer_creations sequence sizes = function
-  | [] -> (identified_functions, actor_calls, buffer_creations)
+let rec make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes = function
+  | [] -> (identified_functions, actor_calls, buffer_declaration, buffer_creations)
   | IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl ->
     (
     match ir_IO_nr with
     | IRActorIOnr(i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code) ->
       match sequence with
-      | [] -> make_c_actors identified_functions actor_calls buffer_creations sequence sizes tl
+      | [] -> make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes tl
       | curr::remaining -> 
         if curr = name then
           if (List.exists (fun x -> x = name) remaining) then
-            if List.exists (fun x -> x = "sin") cons_signals_list then
-              let index = findi "sin" cons_signals_list 0 in
-              let num_sin_tokens = List.nth cons_no_tokens_list index in
+            if List.exists (fun x -> x = "sip") cons_signals_list then
+              let index = findi "sip" cons_signals_list 0 in
+              let num_sip_tokens = List.nth cons_no_tokens_list index in
               make_c_actors 
               identified_functions
               (
                 actor_calls
-                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sin_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sin_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sin, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
+                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sip_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sip_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sip, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
               )
+              buffer_declaration
               buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
             else if List.exists (fun x -> x = "sout") prod_signals_list then
               let index = findi "sout" prod_signals_list 0 in
@@ -83,6 +84,7 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
                 ^ "\n\tprintf(\"Output:\");\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sout_tokens]) ^ "; j++) {\n\t\treadToken(sout, &output);\n\t\tprintf(\"%d\\n\", output);\n\t}\n"
               )
+              buffer_declaration
               buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
             else
               make_c_actors 
@@ -91,18 +93,20 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
                 actor_calls
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
               )
+              buffer_declaration
               buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
           else
-            if List.exists (fun x -> x = "sin") cons_signals_list then
-              let index = findi "sin" cons_signals_list 0 in
-              let num_sin_tokens = List.nth cons_no_tokens_list index in
+            if List.exists (fun x -> x = "sip") cons_signals_list then
+              let index = findi "sip" cons_signals_list 0 in
+              let num_sip_tokens = List.nth cons_no_tokens_list index in
               make_c_actors 
               (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n")
               (
                 actor_calls
-                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sin_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sin_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sin, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
+                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sip_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sip_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sip, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
               )
+              buffer_declaration
               buffer_creations remaining sizes tl
             else if List.exists (fun x -> x = "sout") prod_signals_list then
               let index = findi "sout" prod_signals_list 0 in
@@ -114,6 +118,7 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
                 ^ "\n\tprintf(\"Output:\");\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sout_tokens]) ^ "; j++) {\n\t\treadToken(sout, &output);\n\t\tprintf(\"%d\\n\", output);\n\t}\n"
               )
+              buffer_declaration
               buffer_creations remaining sizes tl
 
             else
@@ -123,9 +128,10 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
                 actor_calls
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
               )
+              buffer_declaration
               buffer_creations remaining sizes tl
         else
-          make_c_actors identified_functions actor_calls buffer_creations sequence sizes (List.append tl [IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)])
+          make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes (List.append tl [IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)])
     )
   
   | IRSDFChannel(name, attrl, signall, paraml)::tl -> 
@@ -160,19 +166,31 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
     | _::tl -> print_initial_tokens tl
     | [] -> ""
   in
-  make_c_actors identified_functions actor_calls (buffer_creations ^ "\n\t" ^ "token* buffer_" ^ sigName ^ " = malloc(" ^ string_of_int size ^ " * sizeof(token));\n\t" ^ "channel " ^ sigName ^ " = createFIFO(buffer_" ^ sigName ^ ", " ^ string_of_int size ^ ");\n" ^ print_initial_tokens paraml) sequence sizes tl
+  make_c_actors identified_functions actor_calls (buffer_declaration ^ "\n" ^ "token* buffer_" ^ sigName ^ ";\n" ^ "channel " ^ sigName ^ ";\n") (buffer_creations ^ "\n\t" ^ "buffer_" ^ sigName ^ " = malloc(" ^ string_of_int size ^ " * sizeof(token));\n\t" ^ sigName ^ " = createFIFO(buffer_" ^ sigName ^ ", " ^ string_of_int size ^ ");\n" ^ print_initial_tokens paraml) sequence sizes tl
 
 
   | IRUnkownVertex(name, attrl, signall, paraml)::tl ->
-    make_c_actors identified_functions actor_calls buffer_creations sequence sizes tl
+    make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes tl
 
 let make_c_code sequence sizes = function
   | IRSystemgraph(vl, el) ->
     let oc = open_out "../example-c-implementation/output.c" in
     fprintf oc "/* Code generated by the ForSyDe compiler */\n";
     fprintf oc "%s" make_c_header;
-    let (identified_functions, actor_calls, buffer_creations) = make_c_actors "" "" "" sequence sizes vl in
+    let (identified_functions, actor_calls, buffer_declaration, buffer_creations) = make_c_actors "" "" "" "" sequence sizes vl in
     fprintf oc "%s" identified_functions;
+    fprintf oc "%s" "\nFILE *file;\n";
+    fprintf oc "%s" buffer_declaration;
+    fprintf oc "%s" (
+      "\n" ^
+      "void *loop0(void* arg)" ^ "\n" ^
+      "{" ^ "\n\t" ^
+      "token input;" ^ "\n\t" ^
+      "token output;" ^ "\n\n\t" ^
+      "while(1){" ^ "\n\t\t"
+    );
+    fprintf oc "%s" actor_calls;
+    fprintf oc "%s" "\t}\n}\n";
     fprintf oc "%s" (
       "\n" ^ 
       "int main(int argc, char *argv[]) {" ^ "\n\t" ^
@@ -180,22 +198,22 @@ let make_c_code sequence sizes = function
       "if (argc != 2) {" ^ "\n\t\t" ^
         "fprintf(stderr, \"Usage: %s <filename>\\n\", argv[0]);" ^ "\n\t\t" ^
         "return 1; // Return an error code" ^ "\n\t" ^
-      "}" ^ "\n\t\n" ^
-      "FILE *file;" ^ "\n\n\t" ^
+      "}" ^ "\n\t\n\t" ^
       "// Open the file for reading" ^ "\n\t" ^
       "file = fopen(argv[1], \"r\");" ^ "\n\n\t" ^
       "// Check if the file opened successfully" ^ "\n\t" ^
       "if (file == NULL) {" ^ "\n\t\t" ^
       "fprintf(stderr, \"Unable to open the file '%s' for reading.\\n\", argv[1]);" ^ "\n\t\t" ^
       "return 1; // Return an error code" ^ "\n\t" ^
-      "}" ^ "\n\t\n" ^
-      "token input;" ^ "\n\t" ^ 
-      "token output;"
+      "}" ^ "\n\t\n\t"
       );
 
     fprintf oc "%s" buffer_creations;
-    fprintf oc "%s" "\n\twhile(1){\n";
-    fprintf oc "%s" actor_calls;
-    fprintf oc "%s" "\t}\n";
+    fprintf oc "%s" (
+      "\n\t" ^
+      "pthread_t thread0;" ^ "\n\t" ^
+      "pthread_create(&thread0, NULL, loop0, NULL);" ^ "\n\t" ^
+      "pthread_join(thread0, NULL);" ^ "\n\n"
+    );
     fprintf oc "%s" make_c_footer;
     close_out oc
