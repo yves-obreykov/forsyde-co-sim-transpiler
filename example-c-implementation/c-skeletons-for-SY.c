@@ -1,19 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "c-skeletons-for-SY.h"
+#include "c-skeletons-for-core-vector.h"
+
 
 // Define a Signal structure
-struct Signal
-{
-    int data;
-    struct Signal *next;
-};
-
-// Defina a Vector of Signal structure
-struct Vector 
-{
-    struct Signal *signal;
-    struct Vector *next;
-};
+// struct Signal
+// {
+//     int data;
+//     struct Signal *next;
+// };
 
 
 ////////////////////////////////////////
@@ -175,12 +171,55 @@ void zipWith4SY(int (*function)(int, int, int, int), struct Signal *signal1, str
     }
 }
 
-// TODO: implement mapxSY zipWithxSY
+
 // -- | The process constructor 'mapxSY' creates a process network that
 // -- maps a function onto all signals in a vector of signals. See 'mapV'.
 // --
 // mapxSY :: (a -> b) -> Vector (Signal a) -> Vector (Signal b)
 // mapxSY f = mapV (mapSY f)
+void mapxSY(int (*function)(int), struct VectorSignal *vector, struct VectorSignal **vectorOut)
+{
+    struct VectorSignal *currentNode = NULL;
+    struct VectorSignal *prevNode = NULL;
+
+    while (vector != NULL)
+    {
+        struct Signal *signal = vector->signal; // get signal from vector
+        struct Signal *signalOut = NULL;
+        mapSY(function, signal, &signalOut);    // apply f on signal
+
+        struct VectorSignal *newNode = (struct VectorSignal *)malloc(sizeof(struct VectorSignal));
+        newNode->signal = signalOut;
+        newNode->next = NULL;
+        
+        if (*vectorOut == NULL)
+        {
+            *vectorOut = newNode;
+            currentNode = *vectorOut;
+        } else 
+        {
+            prevNode->next = newNode;
+            currentNode = newNode;
+        }
+
+        prevNode = currentNode;        
+        vector = vector->next;
+    }
+}
+
+// -- | The process constructor 'zipWithxSY' works as 'zipWithSY', but
+// -- takes a vector of signals as input.
+// zipWithxSY :: (Vector a -> b) -> Vector (Signal a) -> Signal b
+// zipWithxSY f = mapSY f . zipxSY
+// void zipWithxSY(void (*function)(int (*)(int, int), struct Vector *, int **), struct VectorSignal *vectorSignal, struct Signal *signal)
+// {
+//     struct SignalVector *signalVector = NULL;
+//     zipxSY(vectorSignal, &signalVector);
+
+//     int *result = NULL;
+
+//     function(vectorSignal, vectorSignal)
+// }
 
 
 
@@ -600,45 +639,45 @@ void mealy3SY(int (*nextState)(int, int, int, int), int (*output)(int, int, int,
 //           s = mapSY f o
 
 // Function to create a Signal based on the sourceSY function
-void sourceSY(int (*function)(int), int initial, struct Signal **outputSignal)
-{
-    struct Signal *delayedSignal = NULL;
-    struct Signal *sourceSignal = NULL;
+// void sourceSY(int (*function)(int), int initial, struct Signal **outputSignal)
+// {
+//     struct Signal *delayedSignal = NULL;
+//     struct Signal *sourceSignal = NULL;
 
-    // Create and initialize the delayed part of the signal
-    for (int i = 0; i < 5; i++)
-    {
-        struct Signal *newNode = createSignalNode(initial);
-        newNode->next = delayedSignal;
-        delayedSignal = newNode;
-    }
+//     // Create and initialize the delayed part of the signal
+//     for (int i = 0; i < 5; i++)
+//     {
+//         struct Signal *newNode = createSignalNode(initial);
+//         newNode->next = delayedSignal;
+//         delayedSignal = newNode;
+//     }
 
-    // Create and initialize the source signal
-    for (int i = 0; i < 5; i++)
-    {
-        struct Signal *newNode = createSignalNode(0); // The initial source value
-        newNode->next = sourceSignal;
-        sourceSignal = newNode;
-    }
+//     // Create and initialize the source signal
+//     for (int i = 0; i < 5; i++)
+//     {
+//         struct Signal *newNode = createSignalNode(0); // The initial source value
+//         newNode->next = sourceSignal;
+//         sourceSignal = newNode;
+//     }
 
-    *outputSignal = delayedSignal; // The output signal starts with the delayed part
+//     *outputSignal = delayedSignal; // The output signal starts with the delayed part
 
-    // Apply the function to the source signal and update the output signal
-    while (sourceSignal != NULL)
-    {
-        sourceSignal->data = function(sourceSignal->data);
-        delayedSignal->data = sourceSignal->data;
-        sourceSignal = sourceSignal->next;
-        delayedSignal = delayedSignal->next;
-    }
-}
+//     // Apply the function to the source signal and update the output signal
+//     while (sourceSignal != NULL)
+//     {
+//         sourceSignal->data = function(sourceSignal->data);
+//         delayedSignal->data = sourceSignal->data;
+//         sourceSignal = sourceSignal->next;
+//         delayedSignal = delayedSignal->next;
+//     }
+// }
 
 // Define the AbstExt structure
-struct AbstExt
-{
-    int is_present; // Flag to indicate presence (0 for Abst, 1 for Prst)
-    int value;      // Value for Prst (ignored for Abst)
-};
+// struct AbstExt
+// {
+//     int is_present; // Flag to indicate presence (0 for Abst, 1 for Prst)
+//     int value;      // Value for Prst (ignored for Abst)
+// };
 
 // Source code:
 //  filterSY :: (a -> Bool)        -- ^Predicate function
@@ -791,50 +830,50 @@ void holdSY(int defaultValue, struct Signal *inputSignal, struct Signal **output
 /* Synchronous Processes */
 ///////////////////////////
 
-struct SignalTuple
-{
-    int data1;
-    int data2;
-    struct SignalTuple *next;
-};
+// struct SignalTuple
+// {
+//     int data1;
+//     int data2;
+//     struct SignalTuple *next;
+// };
 
-struct SignalTuple3
-{
-    int data1;
-    int data2;
-    int data3;
-    struct SignalTuple3 *next;
-};
+// struct SignalTuple3
+// {
+//     int data1;
+//     int data2;
+//     int data3;
+//     struct SignalTuple3 *next;
+// };
 
-struct SignalTuple4
-{
-    int data1;
-    int data2;
-    int data3;
-    int data4;
-    struct SignalTuple4 *next;
-};
+// struct SignalTuple4
+// {
+//     int data1;
+//     int data2;
+//     int data3;
+//     int data4;
+//     struct SignalTuple4 *next;
+// };
 
-struct SignalTuple5
-{
-    int data1;
-    int data2;
-    int data3;
-    int data4;
-    int data5;
-    struct SignalTuple5 *next;
-};
+// struct SignalTuple5
+// {
+//     int data1;
+//     int data2;
+//     int data3;
+//     int data4;
+//     int data5;
+//     struct SignalTuple5 *next;
+// };
 
-struct SignalTuple6
-{
-    int data1;
-    int data2;
-    int data3;
-    int data4;
-    int data5;
-    int data6;
-    struct SignalTuple6 *next;
-};
+// struct SignalTuple6
+// {
+//     int data1;
+//     int data2;
+//     int data3;
+//     int data4;
+//     int data5;
+//     int data6;
+//     struct SignalTuple6 *next;
+// };
 
 // TODO: whenSY
 
@@ -1402,8 +1441,200 @@ void unzip6SY(struct SignalTuple6 *signal, struct Signal **result1, struct Signa
     }
 }
 
-// TODO zipxSY
-// TODO unzipxSY
+void printVector2(struct Vector * vector)
+{
+    printf("<");
+    while (vector != NULL)
+    {
+        if (vector->next != NULL)
+        {
+            printf("%d, ", vector->data);
+        } else {
+            printf("%d", vector->data);
+        }
+        vector = vector->next;
+    }
+    printf(">");
+}
+
+void printSignalVector2(struct SignalVector * signalVector)
+{
+    printf("{");
+    while (signalVector != NULL)
+    {
+        printVector2(signalVector->vector);
+        if (signalVector->next != NULL)
+        {
+            printf(", ");
+        }
+        signalVector = signalVector->next;
+    }
+    printf("}");
+}
+
+
+// -- | The process 'zipxSY' transposes a signal of vectors into a vector
+// -- of signals. All the events carried by the output signal are synchronized values from all input signals.
+// Source code:
+// zipxSY :: Vector (Signal a) -> Signal (Vector a)
+// zipxSY = reduceV (zipWithSY (<+>)) . mapV (mapSY unitV)
+void zipxSY(struct VectorSignal *vectorSignal, struct SignalVector **signalVector)
+{
+    // count the number of signals
+    int signalCount = 0;
+    struct VectorSignal *temp = vectorSignal;
+    while (temp != NULL) {
+        signalCount++;
+        temp = temp->next;
+    }
+    // store signal pointers in an array
+    struct Signal *signalArray[signalCount];
+    for (int i = 0; i < signalCount; i++) {
+        signalArray[i] = vectorSignal->signal;
+        vectorSignal = vectorSignal->next;
+    }
+
+    // transpose the VetorSignal to SignalVector
+    int i = 0;
+    struct Vector *prevVectorNode = NULL;
+    struct SignalVector *prevSignalVectorNode = NULL;
+    struct SignalVector *signalVectorTail = NULL;
+    while (signalArray[i] != NULL)
+    {
+        // get value from a signal
+        struct Vector *newVectorNode = (struct Vector *)malloc(sizeof(struct Vector));
+        newVectorNode->data = signalArray[i]->data;
+        newVectorNode->next = NULL;
+
+        if (i == 0) {
+            // create new signalVector node
+            struct SignalVector * newSignalVectorNode = (struct SignalVector *)malloc(sizeof(struct SignalVector));    
+            newSignalVectorNode->vector = newVectorNode;
+            newSignalVectorNode->next = NULL;
+
+            signalVectorTail = newSignalVectorNode;
+
+            prevVectorNode = newVectorNode;
+
+            if (*signalVector == NULL) {
+                *signalVector = newSignalVectorNode;
+                prevSignalVectorNode = newSignalVectorNode; 
+            } else 
+            {
+                // connect the new signalVector node to the signalVector
+                prevSignalVectorNode->next = newSignalVectorNode;
+                prevSignalVectorNode = newSignalVectorNode;
+            } 
+        } else {
+            prevVectorNode->next = newVectorNode;
+            prevVectorNode = newVectorNode;
+        }
+
+        // update the array with signals
+        signalArray[i] = signalArray[i]->next;
+
+        // Move to the next signal in the array
+        i++;
+
+        // Reset to the first signal if needed
+        if (i == signalCount) {
+            i = 0;
+
+            // make sure all vecors have same length
+            for (int j = 0; j < signalCount; j++)
+            {
+                if (signalArray[j] == NULL)
+                {
+                    return;
+                }
+            }
+        }
+    }
+}
+
+
+
+// -- | The process 'unzipxSY' \"unzips\" a vector of signals into a
+// -- signal of vectors.
+// unzipxSY :: Signal (Vector a) -> Vector (Signal a)
+// unzipxSY NullS            = NullV
+// unzipxSY (NullV   :- vss) = unzipxSY vss
+// unzipxSY ((v:>vs) :- vss) = (v :- (mapSY headV vss)) 
+//                             :> (unzipxSY (vs :- (mapSY tailV vss)))
+void unzipxSY(struct SignalVector *signalVector, struct VectorSignal **vectorSignal)
+{
+    // count the number of signals
+    int vectorCount = 0;
+    struct SignalVector *temp = signalVector;
+    while (temp != NULL) {
+        vectorCount++;
+        temp = temp->next;
+    }
+    // store signal pointers in an array
+    struct Vector *vectorArray[vectorCount];
+    for (int i = 0; i < vectorCount; i++) {
+        vectorArray[i] = signalVector->vector;
+        signalVector = signalVector->next;
+    }
+
+    // transpose the signalVector to vectorSignal
+    int i = 0;
+    struct Signal *prevSignalNode = NULL;
+    struct VectorSignal *prevVectorSignalNode = NULL;
+    struct VectorSignal *vectorSignalTail = NULL;
+    while (vectorArray[i] != NULL)
+    {
+        // get value from a vector
+        struct Signal *newSignalNode = (struct Signal *)malloc(sizeof(struct Signal));
+        newSignalNode->data = vectorArray[i]->data;
+        newSignalNode->next = NULL;
+
+        if (i == 0) {
+            // create new signalVector node
+            struct VectorSignal * newVectorSignalNode = (struct VectorSignal *)malloc(sizeof(struct VectorSignal));    
+            newVectorSignalNode->signal = newSignalNode;
+            newVectorSignalNode->next = NULL;
+
+            vectorSignalTail = newVectorSignalNode;
+
+            prevSignalNode = newSignalNode;
+
+            if (*vectorSignal == NULL) {
+                *vectorSignal = newVectorSignalNode;
+                prevVectorSignalNode = newVectorSignalNode; 
+            } else 
+            {
+                // connect the new signalVector node to the signalVector
+                prevVectorSignalNode->next = newVectorSignalNode;
+                prevVectorSignalNode = newVectorSignalNode;
+            } 
+        } else {
+            prevSignalNode->next = newSignalNode;
+            prevSignalNode = newSignalNode;
+        }
+
+        // update the array with vector
+        vectorArray[i] = vectorArray[i]->next;
+
+        // Move to the next signal in the array
+        i++;
+
+        // Reset to the first vector if needed
+        if (i == vectorCount) {
+            i = 0;
+
+            // make sure all signal have same length
+            for (int j = 0; j < vectorCount; j++)
+            {
+                if (vectorArray[j] == NULL)
+                {
+                    return;
+                }
+            }
+        }
+    }
+}
+
 
 // -- | The process 'fstSY' selects always the first value from a signal
 // -- of pairs.
@@ -1467,148 +1698,60 @@ void sndSY(struct SignalTuple *signal, struct Signal **result)
     }
 }
 
-int incr(int y){
-    return 1 + y;
-}
 
-int dubblera(int x) {
-    return x * 2;
-}
 
-int mult(int x, int y) {
-    return x * y;
-}
- 
-int add(int x, int y){
-    return x + y;
-}
 
-int add3(int x, int y, int z) {
-    return x + y + z;
-}
-
-int add4(int x, int y, int z, int w) {
-    return x + y + z + w;
-}
-
-void append_to_signal(struct Signal * signal, int appendValue){
-    // create new node
-    struct Signal *new = (struct Signal *)malloc(sizeof(struct Signal));
-    new->data = appendValue;
-    new->next = NULL;
-    // find end of signal
-    while (signal->next != NULL)
-    {
-        signal = signal->next;
-    }
-    // append new node to end of signal
-    signal->next = new;
-}
-
-void printSignal(struct Signal *signal)
-{
-    printf("{");
-    while (signal != NULL)
-    {
-        if (signal->next != NULL)
-        {
-            printf("%d, ", signal->data);
-        } else {
-            printf("%d", signal->data);
-        }
-        signal = signal->next;
-    }
-    printf("}\n");
-}
-
+////////////////////////////
+/* extra helper functions */
+////////////////////////////
 void freeSignal(struct Signal *signal) 
 {
-    struct Signal * temp = signal;
     while (signal != NULL)
     {
+        struct Signal * temp = signal;
         signal = signal->next;
         free(temp);
         temp = signal;
     }
 }
 
-void printSignalTuple(struct SignalTuple *signal) 
+void freeVector(struct Vector *vector) 
 {
-    printf("{");
-    while (signal != NULL)
+    while (vector != NULL)
     {
-        if (signal->next != NULL)
-        {
-            printf("(%d,%d), ", signal->data1, signal->data2);
-        } else {
-            printf("(%d,%d)", signal->data1, signal->data2);
+        struct Vector *temp = vector;
+        vector = vector->next;
+
+        free(temp);
+    }
+}
+
+void freeVectorSignal(struct VectorSignal *vectorSignal) 
+{
+    while (vectorSignal != NULL)
+    {
+        struct VectorSignal * temp = vectorSignal;
+        vectorSignal = vectorSignal->next;
+        
+        if (temp->signal != NULL) {
+            freeSignal(temp->signal);
         }
-        signal = signal->next;
-    }
-    printf("}\n");
-}
-void freeSignalTuple(struct SignalTuple *signal)
-{
-    struct SignalTuple * temp = signal;
-    while (signal != NULL)
-    {
-        signal = signal->next;
         free(temp);
-        temp = signal;
     }
 }
 
-
-int main () {
-    struct Signal *mySig = (struct Signal *)malloc(sizeof(struct Signal));
-    mySig->next = NULL;
-    mySig->data = 1;
-
-    struct Signal *mySig2 = (struct Signal *)malloc(sizeof(struct Signal));
-    mySig2->next = NULL;
-    mySig2->data = -1;
-    append_to_signal(mySig2, 2);
-    append_to_signal(mySig2, 3);
-
-    struct Signal *mySig3 = (struct Signal *)malloc(sizeof(struct Signal));
-    mySig3->next = NULL;
-    mySig3->data = 1;
-
-    for (int i = 2; i < 6; i++)
+void freeSignalVector(struct SignalVector *signalVector) 
+{
+    while (signalVector != NULL)
     {
-        append_to_signal(mySig, i);
-        append_to_signal(mySig2, (i+2));
-        append_to_signal(mySig3, i);
+        struct SignalVector *temp = signalVector;
+        signalVector = signalVector->next;
+
+        // Check if signalVector is not NULL before accessing its members
+        if (temp->vector != NULL) {
+            freeVector(temp->vector);
+        }
+
+        free(temp);
     }
-
-    // struct Signal *output = NULL;
-    // struct SignalTuple *output = NULL;
-    struct Signal *out1 = NULL;
-    struct Signal *out2 = NULL;
-
-    sourceSY(incr, 0, &out1);
-
-    struct Signal * current = mySig;
-    printSignal(mySig);
-    freeSignal(mySig);
-
-    printSignal(mySig2);
-    freeSignal(mySig2);
-    
-    // printSignal(mySig3);
-    freeSignal(mySig3);
-
-    // printSignal(output);
-    // freeSignal(output);
-
-    // printSignalTuple(output);
-    // freeSignalTuple(output);
-
-    printSignal(out1);
-    freeSignal(out1);
-
-    printSignal(out2);
-    freeSignal(out2);
-
-    return 0;
 }
