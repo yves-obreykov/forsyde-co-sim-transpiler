@@ -69,7 +69,7 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
               identified_functions
               (
                 actor_calls
-                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sin_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sin_tokens]) ^ "; j++) {\n\t\tscanf(\"%d\", &input);\n\t\twriteToken(sin, input);\n\t}\n"
+                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sin_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sin_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sin, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
               )
               buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
@@ -100,7 +100,7 @@ let rec make_c_actors identified_functions actor_calls buffer_creations sequence
               (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n")
               (
                 actor_calls
-                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sin_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sin_tokens]) ^ "; j++) {\n\t\tscanf(\"%d\", &input);\n\t\twriteToken(sin, input);\n\t}\n"
+                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sin_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sin_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sin, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
                 ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
               )
               buffer_creations remaining sizes tl
@@ -173,7 +173,26 @@ let make_c_code sequence sizes = function
     fprintf oc "%s" make_c_header;
     let (identified_functions, actor_calls, buffer_creations) = make_c_actors "" "" "" sequence sizes vl in
     fprintf oc "%s" identified_functions;
-    fprintf oc "%s" ("\nint main(){" ^ "\n\t" ^ "token input;" ^ "\n\t" ^ "token output;");
+    fprintf oc "%s" (
+      "\n" ^ 
+      "int main(int argc, char *argv[]) {" ^ "\n\t" ^
+      "// Check if the correct number of command-line arguments is provided" ^ "\n\t" ^
+      "if (argc != 2) {" ^ "\n\t\t" ^
+        "fprintf(stderr, \"Usage: %s <filename>\\n\", argv[0]);" ^ "\n\t\t" ^
+        "return 1; // Return an error code" ^ "\n\t" ^
+      "}" ^ "\n\t\n" ^
+      "FILE *file;" ^ "\n\n\t" ^
+      "// Open the file for reading" ^ "\n\t" ^
+      "file = fopen(argv[1], \"r\");" ^ "\n\n\t" ^
+      "// Check if the file opened successfully" ^ "\n\t" ^
+      "if (file == NULL) {" ^ "\n\t\t" ^
+      "fprintf(stderr, \"Unable to open the file '%s' for reading.\\n\", argv[1]);" ^ "\n\t\t" ^
+      "return 1; // Return an error code" ^ "\n\t" ^
+      "}" ^ "\n\t\n" ^
+      "token input;" ^ "\n\t" ^ 
+      "token output;"
+      );
+
     fprintf oc "%s" buffer_creations;
     fprintf oc "%s" "\n\twhile(1){\n";
     fprintf oc "%s" actor_calls;

@@ -27,8 +27,25 @@ void f_p3(token* in1, token* in2, token* out1){
 	out1[0] = in1[0] + in1[1]; out1[1] = in2[0] + in2[1];
 }
 
-int main(){
-	token input;
+int main(int argc, char *argv[]) {
+	// Check if the correct number of command-line arguments is provided
+	if (argc != 2) {
+		fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+		return 1; // Return an error code
+	}
+	
+FILE *file;
+
+	// Open the file for reading
+	file = fopen(argv[1], "r");
+
+	// Check if the file opened successfully
+	if (file == NULL) {
+		fprintf(stderr, "Unable to open the file '%s' for reading.\n", argv[1]);
+		return 1; // Return an error code
+	}
+	
+token input;
 	token output;
 	token* buffer_sin = malloc(2 * sizeof(token));
 	channel sin = createFIFO(buffer_sin, 2);
@@ -61,8 +78,14 @@ int main(){
 
 	printf("Read 2 input tokens: ");
 	for(int j = 0; j <2; j++) {
-		scanf("%d", &input);
-		writeToken(sin, input);
+		if(fscanf(file, "%d", &input) == 1) {
+			writeToken(sin, input);
+		}
+	else {
+			printf("End of file reached.\n");
+			fclose(file);
+			return 0;
+		}
 	}
 
 	/* Actor p1 */
@@ -85,8 +108,14 @@ int main(){
 
 	printf("Read 2 input tokens: ");
 	for(int j = 0; j <2; j++) {
-		scanf("%d", &input);
-		writeToken(sin, input);
+		if(fscanf(file, "%d", &input) == 1) {
+			writeToken(sin, input);
+		}
+	else {
+			printf("End of file reached.\n");
+			fclose(file);
+			return 0;
+		}
 	}
 
 	/* Actor p1 */

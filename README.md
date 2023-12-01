@@ -22,8 +22,8 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 3. run "./transpiler ../fiodl-files/toy_sdf_small_cycle_extended.fiodl ../fiodl-files/body_0_ForSyDeDesignModel_Orchestrator.txt"
 4. This will make a c file called "../example-c-implementation/output.c"
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
-6. Run the executable using "./a.exe"
-7. Give it input tokens (two integers at a time) and it will produce outputs (three integers at a time)
+6. Run the executable using "./a.exe ../example-c-implementation/input.txt"
+7. It takes input tokens (two integers at a time) from the input file automatically and it will produce outputs (three integers at a time) to stdout
 
 # Changes
 Got the output from the iDeSyDe tool. This file is called "body_0_ForSyDeDesignModel_Orchestrator.txt". This file has the scheduled. Implemented reading the schedule and buffer sizes from this file. Also implemented reading sin tokens from stdin and writing sout tokens to stdout.
