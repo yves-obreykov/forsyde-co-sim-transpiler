@@ -169,6 +169,9 @@ void circular_buf_put(cbuf_handle_t cbuf, token data)
 {
 	assert(cbuf && cbuf->buffer);
 
+	// block here
+	while(circular_buf_full(cbuf));
+
     cbuf->buffer[cbuf->head] = data;
 
     advance_pointer(cbuf);

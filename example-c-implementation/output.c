@@ -5,22 +5,22 @@
 
 /* Function p1 */
 void f_p1(token* in1, token* out1){
-	out1[0] = in1[0] << 1;
+	int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;
 }
 
 /* Function p2 */
 void f_p2(token* in1, token* out1){
-	out1[0] = in1[0] << 1;
+	int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;
 }
 
 /* Function p3 */
 void f_p3(token* in1, token* out1){
-	out1[0] = in1[0] << 1;
+	int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;
 }
 
 /* Function p4 */
 void f_p4(token* in1, token* out1){
-	out1[0] = in1[0] << 1;
+	int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;
 }
 
 FILE *file;
@@ -63,9 +63,6 @@ void *loop0(void* arg)
 	/* Actor p1 */
 	actor11SDF(1, 1, &sip, &s1, f_p1);
 
-	/* Actor p2 */
-	actor11SDF(1, 1, &s1, &s2, f_p2);
-
 	}
 }
 
@@ -77,8 +74,33 @@ void *loop1(void* arg)
 	while(1){
 		
 
+	/* Actor p2 */
+	actor11SDF(1, 1, &s1, &s2, f_p2);
+
+	}
+}
+
+void *loop2(void* arg)
+{
+	token input;
+	token output;
+
+	while(1){
+		
+
 	/* Actor p3 */
 	actor11SDF(1, 1, &s2, &s3, f_p3);
+
+	}
+}
+
+void *loop3(void* arg)
+{
+	token input;
+	token output;
+
+	while(1){
+		
 
 	/* Actor p4 */
 	actor11SDF(1, 1, &s3, &sout, f_p4);
@@ -129,10 +151,22 @@ int main(int argc, char *argv[]) {
 	pthread_t thread1;
 	pthread_create(&thread1, NULL, loop1, NULL);
 	
+	pthread_t thread2;
+	pthread_create(&thread2, NULL, loop2, NULL);
+	
+	pthread_t thread3;
+	pthread_create(&thread3, NULL, loop3, NULL);
+	
 	pthread_join(thread0, NULL);
 
 	
 	pthread_join(thread1, NULL);
+
+	
+	pthread_join(thread2, NULL);
+
+	
+	pthread_join(thread3, NULL);
 
 		return 0;
 }

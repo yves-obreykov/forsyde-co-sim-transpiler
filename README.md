@@ -29,7 +29,7 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 1. go to transpiler directory
 2. run "make"
 3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl"
-4. This will make a c file called "../example-c-implementation/output.c" which uses 2 pthreads
+4. This will make a c file called "../example-c-implementation/output.c" which uses 4 pthreads
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
 6. Run the executable using "./a.exe ../example-c-implementation/input.txt"
 7. It takes input tokens (one integer at a time) from the input file automatically and it will produce outputs (one integer at a time) to stdout

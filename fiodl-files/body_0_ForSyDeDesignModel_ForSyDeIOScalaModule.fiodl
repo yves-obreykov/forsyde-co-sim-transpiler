@@ -139,6 +139,7 @@ systemgraph {
   (host, managed)
   {
     "superLoopEntries": [
+      "p4"
     ]
   }
   vertex "0.dts/memory"
@@ -152,6 +153,7 @@ systemgraph {
   (host, managed)
   {
     "superLoopEntries": [
+      "p3"
     ]
   }
   vertex "os1"
@@ -159,8 +161,7 @@ systemgraph {
   (host, managed)
   {
     "superLoopEntries": [
-      "p3",
-      "p4"
+      "p2"
     ]
   }
   vertex "os0"
@@ -168,8 +169,7 @@ systemgraph {
   (host, managed)
   {
     "superLoopEntries": [
-      "p1",
-      "p2"
+      "p1"
     ]
   }
   vertex "3.dts/devicebus"

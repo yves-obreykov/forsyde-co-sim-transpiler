@@ -14,7 +14,7 @@ systemgraph {
         "production": {
             "s1": 1_i
         },
-        "inlinedCode":"out1[0] = in1[0] << 1;"
+        "inlinedCode":"int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;"
     }
 
     vertex p2 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s1, s2) {
@@ -31,7 +31,7 @@ systemgraph {
             "s2": 1_i
 
         },
-        "inlinedCode":"out1[0] = in1[0] << 1;"
+        "inlinedCode":"int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;"
     }
 
     vertex p3 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s2, s3) {
@@ -48,7 +48,7 @@ systemgraph {
         "production": {
             "s3": 1_i
         },
-        "inlinedCode":"out1[0] = in1[0] << 1;"
+        "inlinedCode":"int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;"
     }
 
     vertex p4 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s3, sout) {
@@ -64,7 +64,7 @@ systemgraph {
         "production": {
             "sout": 1_i
         },
-        "inlinedCode":"out1[0] = in1[0] << 1;"
+        "inlinedCode":"int temp = in1[0]; for (int i = 0; i < 100000000; i++) { temp *= (-1); } out1[0] = temp;"
     }
 
     
