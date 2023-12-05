@@ -180,6 +180,9 @@ int circular_buf_put2(cbuf_handle_t cbuf, token data)
 
     assert(cbuf && cbuf->buffer);
 
+	// block here
+	while(circular_buf_full(cbuf));
+
     if(!circular_buf_full(cbuf))
     {
         cbuf->buffer[cbuf->head] = data;
@@ -195,6 +198,9 @@ int circular_buf_get(cbuf_handle_t cbuf, token * data)
     assert(cbuf && data && cbuf->buffer);
 
     int r = -1;
+
+	// block here
+	while(circular_buf_empty(cbuf));
 
     if(!circular_buf_empty(cbuf))
     {

@@ -1,0 +1,251 @@
+systemgraph {
+  vertex "p1"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (combFunctions, mappingHost, p1_s1, p1_sin, runtimeHost)
+  {
+    "computationalRequirements": {
+      "proc": {
+        "all": 10_l
+      }
+    },
+    "maxSizeInBits": {
+      "all": 4_l
+    },
+    "setThroughputInSecsDenominator": 68719476736_l,
+    "production": {
+      "p1_s1": 1_i
+    },
+    "consumption": {
+      "p1_sin": 1_i
+    },
+    "setThroughputInSecsNumerator": 8277238900214087_l
+  }
+  vertex "p2"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (combFunctions, mappingHost, p2_s1, p2_s2, runtimeHost)
+  {
+    "computationalRequirements": {
+      "proc": {
+        "all": 10_l
+      }
+    },
+    "maxSizeInBits": {
+      "all": 4_l
+    },
+    "setThroughputInSecsDenominator": 68719476736_l,
+    "production": {
+      "p2_s2": 1_i
+    },
+    "consumption": {
+      "p2_s1": 1_i
+    },
+    "setThroughputInSecsNumerator": 8277238900214087_l
+  }
+  vertex "p3"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (combFunctions, mappingHost, p3_s2, p3_s3, runtimeHost)
+  {
+    "computationalRequirements": {
+      "proc": {
+        "all": 10_l
+      }
+    },
+    "maxSizeInBits": {
+      "all": 4_l
+    },
+    "setThroughputInSecsDenominator": 68719476736_l,
+    "production": {
+      "p3_s3": 1_i
+    },
+    "consumption": {
+      "p3_s2": 1_i
+    },
+    "setThroughputInSecsNumerator": 8277238900214087_l
+  }
+  vertex "p4"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFActor, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::decision::Scheduled, forsyde::io::lib::hierarchy::decision::sdf::AnalyzedActor, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (combFunctions, mappingHost, p4_s3, p4_sout, runtimeHost)
+  {
+    "computationalRequirements": {
+      "proc": {
+        "all": 10_l
+      }
+    },
+    "maxSizeInBits": {
+      "all": 4_l
+    },
+    "setThroughputInSecsDenominator": 68719476736_l,
+    "production": {
+      "p4_sout": 1_i
+    },
+    "consumption": {
+      "p4_s3": 1_i
+    },
+    "setThroughputInSecsNumerator": 8277238900214087_l
+  }
+  vertex "chSin"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, mappingHost, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "chS1"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, mappingHost, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "chS2"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, mappingHost, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "chS3"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, mappingHost, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "chSout"
+  [forsyde::io::lib::hierarchy::behavior::DataTypeLike, forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel, forsyde::io::lib::hierarchy::decision::MemoryMapped, forsyde::io::lib::hierarchy::implementation::functional::BoundedBufferLike, forsyde::io::lib::hierarchy::implementation::functional::BufferLike, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedDataType, forsyde::io::lib::hierarchy::visualization::Visualizable]
+  (consumer, mappingHost, producer, tokenDataType)
+  {
+    "maxSizeInBits": {},
+    "elementSizeInBits": 0_l,
+    "maxElements": 1_i,
+    "numInitialTokens": 0_i
+  }
+  vertex "2.dts/memory"
+  [forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericMemoryModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "operatingFrequencyInHertz": 1_l
+  }
+  vertex "os2"
+  [forsyde::io::lib::hierarchy::platform::runtime::AbstractRuntime, forsyde::io::lib::hierarchy::platform::runtime::SuperLoopRuntime]
+  (host, managed)
+  {
+    "superLoopEntries": [
+    ]
+  }
+  vertex "0.dts/memory"
+  [forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericMemoryModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "operatingFrequencyInHertz": 1_l
+  }
+  vertex "os3"
+  [forsyde::io::lib::hierarchy::platform::runtime::AbstractRuntime, forsyde::io::lib::hierarchy::platform::runtime::SuperLoopRuntime]
+  (host, managed)
+  {
+    "superLoopEntries": [
+    ]
+  }
+  vertex "os1"
+  [forsyde::io::lib::hierarchy::platform::runtime::AbstractRuntime, forsyde::io::lib::hierarchy::platform::runtime::SuperLoopRuntime]
+  (host, managed)
+  {
+    "superLoopEntries": [
+      "p3",
+      "p4"
+    ]
+  }
+  vertex "os0"
+  [forsyde::io::lib::hierarchy::platform::runtime::AbstractRuntime, forsyde::io::lib::hierarchy::platform::runtime::SuperLoopRuntime]
+  (host, managed)
+  {
+    "superLoopEntries": [
+      "p1",
+      "p2"
+    ]
+  }
+  vertex "3.dts/devicebus"
+  [forsyde::io::lib::hierarchy::decision::ConcurrentSlotsReserved, forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericCommunicationModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "slotReservations": [
+      [
+
+      ]
+    ],
+    "operatingFrequencyInHertz": 1_l
+  }
+  vertex "1.dts/devicebus"
+  [forsyde::io::lib::hierarchy::decision::ConcurrentSlotsReserved, forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericCommunicationModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "slotReservations": [
+      [
+        "chS1",
+        "chS2"
+      ]
+    ],
+    "operatingFrequencyInHertz": 1_l
+  }
+  vertex "2.dts/devicebus"
+  [forsyde::io::lib::hierarchy::decision::ConcurrentSlotsReserved, forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericCommunicationModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "slotReservations": [
+      [
+        "chS1",
+        "chS2"
+      ]
+    ],
+    "operatingFrequencyInHertz": 1_l
+  }
+  vertex "0.dts/devicebus"
+  [forsyde::io::lib::hierarchy::decision::ConcurrentSlotsReserved, forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericCommunicationModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "slotReservations": [
+      [
+        "chS1",
+        "chS2"
+      ]
+    ],
+    "operatingFrequencyInHertz": 1_l
+  }
+  vertex "gbus"
+  [forsyde::io::lib::hierarchy::decision::ConcurrentSlotsReserved, forsyde::io::lib::hierarchy::platform::hardware::DigitalModule, forsyde::io::lib::hierarchy::platform::hardware::GenericCommunicationModule, forsyde::io::lib::hierarchy::platform::hardware::HardwareModule]
+  ()
+  {
+    "slotReservations": [
+      [
+        "chS1",
+        "chS2"
+      ]
+    ],
+    "operatingFrequencyInHertz": 1_l
+  }
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "p1" port "p1_s1" to "chS1" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "chS1" port "consumer" to "p2" port "p2_s1"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "p2" port "p2_s2" to "chS2" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "chS2" port "consumer" to "p3" port "p3_s2"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "p3" port "p3_s3" to "chS3" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "chS3" port "consumer" to "p4" port "p4_s3"
+  edge [] from "p1" port "mappingHost" to "2.dts/memory" 
+  edge [] from "p1" port "runtimeHost" to "os2" 
+  edge [] from "p2" port "mappingHost" to "2.dts/memory" 
+  edge [] from "p2" port "runtimeHost" to "os2" 
+  edge [] from "p3" port "mappingHost" to "0.dts/memory" 
+  edge [] from "p3" port "runtimeHost" to "os3" 
+  edge [] from "p4" port "mappingHost" to "0.dts/memory" 
+  edge [] from "p4" port "runtimeHost" to "os3" 
+  edge [] from "chS1" port "mappingHost" to "2.dts/memory" 
+  edge [] from "chS2" port "mappingHost" to "0.dts/memory" 
+  edge [] from "chS3" port "mappingHost" to "0.dts/memory" 
+}

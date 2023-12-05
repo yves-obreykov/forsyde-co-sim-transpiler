@@ -90,7 +90,7 @@ let pprint_systemgraph = function
 
 
 (* Find "superLoopEntries" in vertex "os0" *)
-let find_super_loop = function
+(* let find_super_loop = function
 | Some Systemgraph(vl, el) ->
   let rec find_super_loop_vertex = function
     | [] -> None
@@ -121,7 +121,56 @@ let find_super_loop = function
     in
     pprint_param_list vl
   | None -> [])
+| None -> [] *)
+
+
+let find_super_loop = function
+| Some Systemgraph(vl, el) ->
+  let rec find_super_loop_vertex params_found names_found = function
+    | [] -> (None, params_found, names_found)
+    | Vertex(name, _, _, paraml)::tl ->
+      if List.mem name ["os0"; "os1"; "os2"; "os3"] && not (List.mem name names_found) then
+      let rec find_super_loop_param = function
+        | [] -> None
+        | ParamLeaf(name, valuel)::tl ->
+          (find_super_loop_param tl)
+        | ParamNode(name, paraml)::tl ->
+          if name = "superLoopEntries" then
+            (Some paraml)
+          else
+            (find_super_loop_param tl)
+      in
+      let param_list = find_super_loop_param paraml in
+      let updated_names_found =
+        (match param_list with
+        | Some param_list -> name :: names_found
+        | None -> names_found) in
+      let updated_params_found =
+        (match param_list with
+        | Some param_list -> [param_list] @ params_found
+        | None -> params_found)
+      in
+      find_super_loop_vertex updated_params_found updated_names_found tl
+      else
+      find_super_loop_vertex params_found names_found tl
+  in
+  let (res1, res2, res3) = find_super_loop_vertex [] [] vl
+  in
+  if res2 = [] then
+    failwith "No superLoopEntries found"
+  else
+  let rec pprint_param_list = function
+    | [] -> []
+    | ParamLeaf(name, valuel)::tl -> name :: pprint_param_list tl
+    | ParamNode(name, paraml)::tl -> pprint_param_list tl
+  in
+  (List.map pprint_param_list res2)
 | None -> []
+
+        
+    
+
+
 
 
 (* Find vertices with the attribute "forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel" *)

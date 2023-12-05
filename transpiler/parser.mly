@@ -104,6 +104,8 @@ param:
     { ParamLeaf(k, [v]) }
   | k = STRING COLON "[" vl = value_list "]"
     { ParamLeaf(k, vl) }
+  | k = STRING COLON "[" "[" "]" "]"
+    { ParamLeaf(k, [Value("")]) }
   | k = STRING COLON "[" "[" vl = value_list "]" "]"
     { ParamLeaf(k, vl) }
   | k = STRING COLON "[" p = param_list "]"

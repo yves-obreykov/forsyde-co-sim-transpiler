@@ -51,87 +51,91 @@ let extract_size name sizes =
   in
   find_size name sizes
     
-let rec make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes = function
+let rec make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequences sizes = function
   | [] -> (identified_functions, actor_calls, buffer_declaration, buffer_creations)
   | IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl ->
     (
     match ir_IO_nr with
     | IRActorIOnr(i, o, prod_no_tokens_list, cons_no_tokens_list, prod_signals_list, cons_signals_list, inlined_code) ->
-      match sequence with
-      | [] -> make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes tl
-      | curr::remaining -> 
-        if curr = name then
-          if (List.exists (fun x -> x = name) remaining) then
-            if List.exists (fun x -> x = "sip") cons_signals_list then
-              let index = findi "sip" cons_signals_list 0 in
-              let num_sip_tokens = List.nth cons_no_tokens_list index in
-              make_c_actors 
-              identified_functions
-              (
-                actor_calls
-                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sip_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sip_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sip, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
-                ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
-              )
-              buffer_declaration
-              buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
-            else if List.exists (fun x -> x = "sout") prod_signals_list then
-              let index = findi "sout" prod_signals_list 0 in
-              let num_sout_tokens = List.nth prod_no_tokens_list index in
-              make_c_actors 
-              identified_functions
-              (
-                actor_calls
-                ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
-                ^ "\n\tprintf(\"Output:\");\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sout_tokens]) ^ "; j++) {\n\t\treadToken(sout, &output);\n\t\tprintf(\"%d\\n\", output);\n\t}\n"
-              )
-              buffer_declaration
-              buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
+      match sequences with
+      | [] -> make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequences sizes tl
+      | sequence::remaining_sequences ->
+        match sequence with
+        | [] -> make_c_actors identified_functions (actor_calls^"\n@\n") buffer_declaration buffer_creations remaining_sequences sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
+        | curr::remaining -> 
+          (List.iter print_endline sequence);
+          print_endline "";
+          let (new_identified_functions, new_actor_calls, new_sequences, new_vl) =
+          if curr = name then
+            if (List.exists (fun x -> x = name) remaining) then
+              if List.exists (fun x -> x = "sip") cons_signals_list then
+                let index = findi "sip" cons_signals_list 0 in
+                let num_sip_tokens = List.nth cons_no_tokens_list index in
+                (identified_functions),         
+                (
+                  actor_calls
+                  ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sip_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\tprintf(\"Read " ^ (pprint_value_list [num_sip_tokens]) ^ " input tokens: \");\n\t\t\tprintf(\"%d\\n\", input);\n\t\t\twriteToken(sip, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\texit(0);\n\t\t}\n\t}\n"
+                  ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
+                ),
+                (List.append [remaining] remaining_sequences),
+                ((IRSDFActor(name, attrl, signall, paraml, ir_IO_nr))::tl)
+              else if List.exists (fun x -> x = "sout") prod_signals_list then
+                let index = findi "sout" prod_signals_list 0 in
+                let num_sout_tokens = List.nth prod_no_tokens_list index in
+                (identified_functions),         
+                (
+                  actor_calls
+                  ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
+                  ^ "\n\tprintf(\"Output:\");\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sout_tokens]) ^ "; j++) {\n\t\treadToken(sout, &output);\n\t\tprintf(\"%d\\n\", output);\n\t}\n"
+                ),
+                (List.append [remaining] remaining_sequences),
+                ((IRSDFActor(name, attrl, signall, paraml, ir_IO_nr))::tl)
+              else
+                (identified_functions),         
+                (
+                  actor_calls
+                  ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
+                ),
+                (List.append [remaining] remaining_sequences),
+                ((IRSDFActor(name, attrl, signall, paraml, ir_IO_nr))::tl)
             else
-              make_c_actors 
-              identified_functions
-              (
-                actor_calls
-                ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
-              )
-              buffer_declaration
-              buffer_creations remaining sizes (IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl)
+              if List.exists (fun x -> x = "sip") cons_signals_list then
+                let index = findi "sip" cons_signals_list 0 in
+                let num_sip_tokens = List.nth cons_no_tokens_list index in
+                (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n"),
+                (
+                  actor_calls
+                  ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sip_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\tprintf(\"Read " ^ (pprint_value_list [num_sip_tokens]) ^ " input tokens: \");\n\t\t\tprintf(\"%d\\n\", input);\n\t\t\twriteToken(sip, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\texit(0);\n\t\t}\n\t}\n"
+                  ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
+                ),
+                (List.append [remaining] remaining_sequences),
+                tl
+              else if List.exists (fun x -> x = "sout") prod_signals_list then
+                let index = findi "sout" prod_signals_list 0 in
+                let num_sout_tokens = List.nth prod_no_tokens_list index in
+                (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n"),
+                (
+                  actor_calls
+                  ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
+                  ^ "\n\tprintf(\"Output:\");\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sout_tokens]) ^ "; j++) {\n\t\treadToken(sout, &output);\n\t\tprintf(\"%d\\n\", output);\n\t}\n"
+                ),
+                (List.append [remaining] remaining_sequences),
+                tl
+              else
+                (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n"),
+                (
+                  actor_calls
+                  ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
+                ),
+                (List.append [remaining] remaining_sequences),
+                tl
           else
-            if List.exists (fun x -> x = "sip") cons_signals_list then
-              let index = findi "sip" cons_signals_list 0 in
-              let num_sip_tokens = List.nth cons_no_tokens_list index in
-              make_c_actors 
-              (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n")
-              (
-                actor_calls
-                ^ "\n\tprintf(\"Read " ^ (pprint_value_list [num_sip_tokens]) ^ " input tokens: \");" ^ "\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sip_tokens]) ^ "; j++) {\n\t\tif(fscanf(file, \"%d\", &input) == 1) {\n\t\t\twriteToken(sip, input);\n\t\t}\n\telse {\n\t\t\tprintf(\"End of file reached.\\n\");\n\t\t\tfclose(file);\n\t\t\treturn 0;\n\t\t}\n\t}\n"
-                ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
-              )
-              buffer_declaration
-              buffer_creations remaining sizes tl
-            else if List.exists (fun x -> x = "sout") prod_signals_list then
-              let index = findi "sout" prod_signals_list 0 in
-              let num_sout_tokens = List.nth prod_no_tokens_list index in
-              make_c_actors 
-              (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n")
-              (
-                actor_calls
-                ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
-                ^ "\n\tprintf(\"Output:\");\n\tfor(int j = 0; j <" ^ (pprint_value_list [num_sout_tokens]) ^ "; j++) {\n\t\treadToken(sout, &output);\n\t\tprintf(\"%d\\n\", output);\n\t}\n"
-              )
-              buffer_declaration
-              buffer_creations remaining sizes tl
-
-            else
-              make_c_actors 
-              (identified_functions ^ "\n/* Function " ^ name ^ " */\n" ^ "void f_" ^ name ^ "(" ^ pprint_input_list 1 cons_signals_list ^ ", " ^ pprint_output_list 1 prod_signals_list ^ "){\n" ^ "\t" ^ pprint_inlined_code inlined_code ^ "\n}\n")
-              (
-                actor_calls
-                ^ "\n\t/* Actor " ^ name ^ " */\n\t" ^ "actor" ^ string_of_int i ^ string_of_int o ^ "SDF(" ^ pprint_value_list cons_no_tokens_list ^ ", " ^ pprint_value_list prod_no_tokens_list ^ ", " ^ pprint_string_list cons_signals_list ^ ", " ^ pprint_string_list prod_signals_list ^ ", f_" ^ name ^ ");\n"
-              )
-              buffer_declaration
-              buffer_creations remaining sizes tl
-        else
-          make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes (List.append tl [IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)])
+            identified_functions,
+            actor_calls,
+            (List.append remaining_sequences [sequence]),
+            (List.append tl [IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)])
+        in
+        make_c_actors new_identified_functions new_actor_calls buffer_declaration buffer_creations new_sequences sizes new_vl
     )
   
   | IRSDFChannel(name, attrl, signall, paraml)::tl -> 
@@ -166,31 +170,33 @@ let rec make_c_actors identified_functions actor_calls buffer_declaration buffer
     | _::tl -> print_initial_tokens tl
     | [] -> ""
   in
-  make_c_actors identified_functions actor_calls (buffer_declaration ^ "\n" ^ "token* buffer_" ^ sigName ^ ";\n" ^ "channel " ^ sigName ^ ";\n") (buffer_creations ^ "\n\t" ^ "buffer_" ^ sigName ^ " = malloc(" ^ string_of_int size ^ " * sizeof(token));\n\t" ^ sigName ^ " = createFIFO(buffer_" ^ sigName ^ ", " ^ string_of_int size ^ ");\n" ^ print_initial_tokens paraml) sequence sizes tl
+  make_c_actors identified_functions actor_calls (buffer_declaration ^ "\n" ^ "token* buffer_" ^ sigName ^ ";\n" ^ "channel " ^ sigName ^ ";\n") (buffer_creations ^ "\n\t" ^ "buffer_" ^ sigName ^ " = malloc(" ^ string_of_int size ^ " * sizeof(token));\n\t" ^ sigName ^ " = createFIFO(buffer_" ^ sigName ^ ", " ^ string_of_int size ^ ");\n" ^ print_initial_tokens paraml) sequences sizes tl
 
 
   | IRUnkownVertex(name, attrl, signall, paraml)::tl ->
-    make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequence sizes tl
+    make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequences sizes tl
 
-let make_c_code sequence sizes = function
+    
+let make_c_code sequences sizes = function
   | IRSystemgraph(vl, el) ->
     let oc = open_out "../example-c-implementation/output.c" in
     fprintf oc "/* Code generated by the ForSyDe compiler */\n";
     fprintf oc "%s" make_c_header;
-    let (identified_functions, actor_calls, buffer_declaration, buffer_creations) = make_c_actors "" "" "" "" sequence sizes vl in
+    let (identified_functions, actor_calls, buffer_declaration, buffer_creations) = make_c_actors "" "" "" "" sequences sizes vl in
     fprintf oc "%s" identified_functions;
     fprintf oc "%s" "\nFILE *file;\n";
     fprintf oc "%s" buffer_declaration;
-    fprintf oc "%s" (
+    (*Split actor_calls into a list of strings by the delimiter "\@\n"*)
+    let actor_calls_list = String.split_on_char '@' actor_calls in
+    (* Iterate over the list of strings and print this header followed by the string *)
+    List.iter (fun x -> fprintf oc "%s" (
       "\n" ^
-      "void *loop0(void* arg)" ^ "\n" ^
+      "void *loop" ^ string_of_int (findi x actor_calls_list 0) ^ "(void* arg)" ^ "\n" ^
       "{" ^ "\n\t" ^
       "token input;" ^ "\n\t" ^
       "token output;" ^ "\n\n\t" ^
-      "while(1){" ^ "\n\t\t"
-    );
-    fprintf oc "%s" actor_calls;
-    fprintf oc "%s" "\t}\n}\n";
+      "while(1){" ^ "\n\t\t" ^ x ^ "\t}\n}\n") ) actor_calls_list;
+
     fprintf oc "%s" (
       "\n" ^ 
       "int main(int argc, char *argv[]) {" ^ "\n\t" ^
@@ -209,11 +215,19 @@ let make_c_code sequence sizes = function
       );
 
     fprintf oc "%s" buffer_creations;
-    fprintf oc "%s" (
-      "\n\t" ^
-      "pthread_t thread0;" ^ "\n\t" ^
-      "pthread_create(&thread0, NULL, loop0, NULL);" ^ "\n\t" ^
-      "pthread_join(thread0, NULL);" ^ "\n\n"
-    );
+
+    (* Create pthreads equal to the length of actor_calls_list *)
+    List.iter (fun x -> fprintf oc "%s" (
+      "\n\t" ^ 
+      "pthread_t thread" ^ string_of_int (findi x actor_calls_list 0) ^ ";" ^ "\n\t" ^
+      "pthread_create(&thread" ^ string_of_int (findi x actor_calls_list 0) ^ ", NULL, loop" ^ string_of_int (findi x actor_calls_list 0) ^ ", NULL);" ^ "\n\t"
+    )) actor_calls_list;
+
+    (* Join pthreads equal to the length of actor_calls_list *)
+    List.iter (fun x -> fprintf oc "%s" (
+      "\n\t" ^ 
+      "pthread_join(thread" ^ string_of_int (findi x actor_calls_list 0) ^ ", NULL);" ^ "\n\n\t"
+    )) actor_calls_list;
+
     fprintf oc "%s" make_c_footer;
     close_out oc

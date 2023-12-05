@@ -1,0 +1,102 @@
+systemgraph {
+
+    vertex p1 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (sip, s1) {
+        "sizeInBits": 800_l,
+        "operationRequirements": {
+            "default": {
+                "integer add": 1_l
+            }
+        },
+        "consumption": {
+            "sip": 1_i
+            
+        },
+        "production": {
+            "s1": 1_i
+        },
+        "inlinedCode":"out1[0] = in1[0] << 1;"
+    }
+
+    vertex p2 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s1, s2) {
+        "sizeInBits": 800_l,
+        "operationRequirements": {
+            "default": {
+                "integer add": 1_l
+            }
+        },
+        "consumption": {
+            "s1": 1_i
+        },
+        "production": {
+            "s2": 1_i
+
+        },
+        "inlinedCode":"out1[0] = in1[0] << 1;"
+    }
+
+    vertex p3 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s2, s3) {
+        "sizeInBits": 800_l,
+        "operationRequirements": {
+            "default": {
+                "integer add": 1_l
+            }
+        },
+        "consumption": {
+            "s2": 1_i
+           
+        },
+        "production": {
+            "s3": 1_i
+        },
+        "inlinedCode":"out1[0] = in1[0] << 1;"
+    }
+
+    vertex p4 [moc::sdf::SDFActor, visualization::Visualizable, impl::InstrumentedExecutable] (s3, sout) {
+        "sizeInBits": 800_l,
+        "operationRequirements": {
+            "default": {
+                "integer add": 1_l
+            }
+        },
+        "consumption": {
+            "s3": 1_i
+        },
+        "production": {
+            "sout": 1_i
+        },
+        "inlinedCode":"out1[0] = in1[0] << 1;"
+    }
+
+    
+    vertex sipSig [moc::sdf::SDFChannel, visualization::Visualizable] (producer, consumer, initialTokenValues) {
+        "numOfInitialTokens": 0_i
+    }
+
+    vertex s1Sig [moc::sdf::SDFChannel, visualization::Visualizable] (producer, consumer, initialTokenValues) {
+        "numOfInitialTokens": 0_i
+    }
+
+    vertex s2Sig [moc::sdf::SDFChannel, visualization::Visualizable] (producer, consumer, initialTokenValues) {
+        "numOfInitialTokens": 0_i
+    }
+
+    vertex s3Sig [moc::sdf::SDFChannel, visualization::Visualizable] (producer, consumer, initialTokenValues) {
+        "numOfInitialTokens": 0_i
+    }
+
+    vertex soutSig [moc::sdf::SDFChannel, visualization::Visualizable] (producer, consumer, initialTokenValues) {
+        "numOfInitialTokens": 0_i
+    }
+
+
+
+    edge [moc::sdf::SDFDataEdge, visualization::VisualConnection] from p1 port s1 to s1Sig port producer
+    edge [moc::sdf::SDFDataEdge, visualization::VisualConnection] from s1Sig port consumer to p2 port s1
+
+    edge [moc::sdf::SDFDataEdge, visualization::VisualConnection] from p2 port s2 to s2Sig port producer
+    edge [moc::sdf::SDFDataEdge, visualization::VisualConnection] from s2Sig port consumer to p3 port s2
+
+    edge [moc::sdf::SDFDataEdge, visualization::VisualConnection] from p3 port s3 to s3Sig port producer
+    edge [moc::sdf::SDFDataEdge, visualization::VisualConnection] from s3Sig port consumer to p4 port s3
+
+}
