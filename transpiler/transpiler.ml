@@ -12,7 +12,7 @@ let print_position out_channel lexbuf =
   fprintf out_channel "%s:%d:%d" 
          pos.pos_fname pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
-let parse_with_error lexbuf sequences sizes =
+let parse_with_error lexbuf sequences sizes target_platform =
   let res =
     try
       Parser.main Lexer.read lexbuf
@@ -33,7 +33,10 @@ let parse_with_error lexbuf sequences sizes =
   print_endline ("Hybrid IR is: ");
   print_endline (pprint_hybrid_ir res2);
   print_endline ("Making C code...");
-  make_c_code sequences sizes res2;
+  if (target_platform = "multithread") || (target_platform = "multicore") then
+    make_c_code_threads sequences sizes target_platform res2
+  else
+    make_c_code_simple sequences sizes target_platform res2;
   print_endline ("Making C code is done")
 
 
@@ -73,7 +76,17 @@ let () =
   lexbuf2.lex_curr_p <- 
     { lexbuf2.lex_curr_p with pos_fname = filename2 };
   let (sequences, sizes) = find_sequence lexbuf2 in
-  parse_with_error lexbuf sequences sizes;
+  let target_platform = Sys.argv.(3) in
+  (*Ensure that the target platform is supported*)
+  if (target_platform <> "multithread") && (target_platform <> "multicore") && (target_platform <> "singlethread") then
+    begin
+      print_endline "The target platform is not supported. Please choose one of the following:";
+      print_endline "multithread";
+      print_endline "multicore";
+      print_endline "singlethread";
+      exit (-1)
+    end;
+  parse_with_error lexbuf sequences sizes target_platform;
   print_endline "The sequence is:";
   List.iter print_endline (List.nth sequences 0);
   print_endline "The channel sizes are:";
