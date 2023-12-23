@@ -4,11 +4,11 @@
 #include "c-skeletons-for-core-vector.h"
 
 // Define a Signal structure
-struct Signal
+typedef struct Signal
 {
     int data;
     struct Signal *next;
-};
+} Signal;
 
 // Function prototypes for combinational process constructors
 void mapSY(int (*function)(int), struct Signal *signal, struct Signal **result);

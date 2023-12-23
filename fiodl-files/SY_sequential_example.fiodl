@@ -1,0 +1,127 @@
+systemgraph{
+
+    vertex p_1 [moc::sy::SYMap, visualization::GrayBox] (combFunctions, s_in, s_1, contained) {
+        "inputPorts": [
+            "s_in" 
+            
+        ],
+        "outputPorts": [
+            "s_1"
+        ],
+        "visualizedPropertiesNames": []
+    }
+
+    vertex p_2 [moc::sy::SYMap, visualization::GrayBox] (combFunctions, s_1, s_2, contained) {
+        "inputPorts": [
+            "s_1" 
+            
+        ],
+        "outputPorts": [
+            "s_2"
+        ],
+        "visualizedPropertiesNames": []
+    }
+
+    vertex p_3 [moc::sy::SYMap, visualization::GrayBox] (combFunctions, s_2, s_3, contained) {
+        "inputPorts": [
+            "s_2" 
+            
+        ],
+        "outputPorts": [
+            "s_3"
+        ],
+        "visualizedPropertiesNames": []
+    }
+
+    vertex p_4 [moc::sy::SYMap, visualization::GrayBox] (combFunctions, s_3, s_out, contained) {
+        "inputPorts": [
+            "s_3" 
+            
+        ],
+        "outputPorts": [
+            "s_out"
+        ],
+        "visualizedPropertiesNames": []
+    }
+
+    vertex "s_in"
+    [impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+    (input, output, dataType, contained)
+    {
+        "maxSizeInBits": 0_l,
+        "visualizedPropertiesNames": []
+    }
+
+    vertex "s_1"
+    [impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+    (input, output, dataType, contained)
+    {
+        "maxSizeInBits": 0_l,
+        "visualizedPropertiesNames": []
+    }
+
+    vertex "s_2"
+    [impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+    (input, output, dataType, contained)
+    {
+        "maxSizeInBits": 0_l,
+        "visualizedPropertiesNames": []
+    }
+
+    vertex "s_3"
+    [impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+    (input, output, dataType, contained)
+    {
+        "maxSizeInBits": 0_l,
+        "visualizedPropertiesNames": []
+    }
+
+    vertex "s_out"
+    [impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+    (input, output, dataType, contained)
+    {
+        "maxSizeInBits": 0_l,
+        "visualizedPropertiesNames": []
+    }   
+
+
+vertex "f"
+    [impl::InstrumentedExecutable, impl::ANSICBlackBoxExecutable, visualization::VisualizableWithProperties]
+    (a, res)
+  {
+    "inlinedCode": "res = a; 
+                        for (int i = 0; i < 1000000; i++) { 
+                            res *= (-1); 
+                        } ",
+    "inputArgumentPorts": ["a"],
+    "outputArgumentPorts": [],
+    "returnPort": "res",
+    "visualizedPropertiesNames": ["inlinedCode"],
+    "operationRequirements": {
+      "impl1": {
+        "intMulti": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+
+
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "s_in" port "output" to "p_1" port "s_in"
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "p_1" port "s_1" to "s_1" port "input"
+
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "s_1" port "output" to "p_2" port "s_1"
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "p_2" port "s_2" to "s_2" port "input"
+
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "s_2" port "output" to "p_3" port "s_2"
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "p_3" port "s_3" to "s_3" port "input"
+
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "s_3" port "output" to "p_4" port "s_3"
+edge [moc::sy::SYDataEdge, visualization::VisualConnection] from "p_4" port "s_out" to "s_out" port "input"
+
+
+edge [moc::AbstractionEdge] from "p_1" port "combFunctions" to "f"
+edge [moc::AbstractionEdge] from "p_2" port "combFunctions" to "f"
+edge [moc::AbstractionEdge] from "p_3" port "combFunctions" to "f"
+edge [moc::AbstractionEdge] from "p_4" port "combFunctions" to "f"
+
+}
