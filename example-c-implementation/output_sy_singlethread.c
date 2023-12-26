@@ -12,11 +12,11 @@ int f(int a){
 }
 
 FILE *file;
-Signal **sip;
-Signal **s1;
-Signal **s2;
-Signal **s3;
-Signal **sout;
+Signal **s_in;
+Signal **s_1;
+Signal **s_2;
+Signal **s_3;
+Signal **s_out;
 
 void *loop0(void* arg)
 {
@@ -31,15 +31,15 @@ void *loop0(void* arg)
 			printf("%d\n", input);
 			
 			// Allocate memory for Signal structure
-            if(*sip == NULL)
+            if(*s_in == NULL)
 			{
-				*sip = (struct Signal *)malloc(sizeof(struct Signal));
-				(*sip)->data = input;
-				(*sip)->next = NULL;
+				*s_in = (struct Signal *)malloc(sizeof(struct Signal));
+				(*s_in)->data = input;
+				(*s_in)->next = NULL;
 			}
 			else
 			{
-				struct Signal *current = *sip;
+				struct Signal *current = *s_in;
 				while (current->next != NULL)
 				{
 					current = current->next;
@@ -56,20 +56,20 @@ void *loop0(void* arg)
 		}
 	}
 
-	/* Vertex p1 */
-	mapSY(f, *sip, s1);
+	/* Vertex p_1 */
+	mapSY(f, *s_in, s_1);
 
-	/* Vertex p2 */
-	mapSY(f, *s1, s2);
+	/* Vertex p_2 */
+	mapSY(f, *s_1, s_2);
 
-	/* Vertex p3 */
-	mapSY(f, *s2, s3);
+	/* Vertex p_3 */
+	mapSY(f, *s_2, s_3);
 
-	/* Vertex p4 */
-	mapSY(f, *s3, sout);
+	/* Vertex p_4 */
+	mapSY(f, *s_3, s_out);
 
 	printf("Output:");
-	struct Signal *current = *sout;
+	struct Signal *current = *s_out;
 	while (current != NULL)
 	{
 		printf("%d\n", current->data);
@@ -93,17 +93,22 @@ int main(int argc, char *argv[]) {
 		return 1; // Return an error code
 	}
 
-	// Allocate memory for Signal structure
-	sip = (struct Signal **)malloc(sizeof(struct Signal *));
-	*sip = NULL;
-	s1 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s1 = NULL;
-	s2 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s2 = NULL;
-	s3 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s3 = NULL;
-	sout = (struct Signal **)malloc(sizeof(struct Signal *));
-	*sout = NULL;
+	// Allocate memory for Signal structures
+
+	s_in = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_in = NULL;
+
+	s_1 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_1 = NULL;
+
+	s_2 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_2 = NULL;
+
+	s_3 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_3 = NULL;
+
+	s_out = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_out = NULL;
 
 	loop0(NULL);
 

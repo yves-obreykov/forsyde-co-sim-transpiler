@@ -12,7 +12,7 @@ let print_position out_channel lexbuf =
   fprintf out_channel "%s:%d:%d" 
          pos.pos_fname pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
-let parse_with_error lexbuf sequences sizes target_platform =
+let parse_with_error lexbuf sequences sizes actor_type target_platform =
   let res =
     try
       Parser.main Lexer.read lexbuf
@@ -33,10 +33,17 @@ let parse_with_error lexbuf sequences sizes target_platform =
   print_endline ("Hybrid IR is: ");
   print_endline (pprint_hybrid_ir res2);
   print_endline ("Making C code...");
-  if (target_platform = "multithread") || (target_platform = "multicore") then
-    make_c_code_threads sequences sizes target_platform res2
+  if actor_type = "sy" then
+    begin
+    make_c_code_simple_sy sequences sizes target_platform res2
+    end
   else
-    make_c_code_simple sequences sizes target_platform res2;
+    begin
+    if (target_platform = "multithread") || (target_platform = "multicore") then
+      make_c_code_threads sequences sizes target_platform res2
+    else
+      make_c_code_simple sequences sizes target_platform res2;
+    end;
   print_endline ("Making C code is done")
 
 
@@ -67,30 +74,58 @@ let () =
   lexbuf.lex_curr_p <- 
     { lexbuf.lex_curr_p with pos_fname = filename };
 
-  let filename2 = Sys.argv.(2) in
-  print_endline "The solved sequence is in file:";
-  print_endline filename2;
-  print_endline " ";
-  let in_channel2 = Core.In_channel.create filename2 in
-  let lexbuf2 = Lexing.from_channel in_channel2 in
-  lexbuf2.lex_curr_p <- 
-    { lexbuf2.lex_curr_p with pos_fname = filename2 };
-  let (sequences, sizes) = find_sequence lexbuf2 in
-  let target_platform = Sys.argv.(3) in
-  (*Ensure that the target platform is supported*)
-  if (target_platform <> "multithread") && (target_platform <> "multicore") && (target_platform <> "singlethread") then
+  let actor_type = Sys.argv.(2) in
+  if actor_type = "sy" then
     begin
-      print_endline "The target platform is not supported. Please choose one of the following:";
-      print_endline "multithread";
-      print_endline "multicore";
-      print_endline "singlethread";
+      print_endline "The actor type is synchronous.";
+      let target_platform = Sys.argv.(3) in
+      (*Ensure that the target platform is supported*)
+      if (target_platform <> "multithread") && (target_platform <> "multicore") && (target_platform <> "singlethread") then
+        begin
+          print_endline "The target platform is not supported. Please choose one of the following:";
+          print_endline "multithread";
+          print_endline "multicore";
+          print_endline "singlethread";
+          exit (-1)
+        end;
+      parse_with_error lexbuf [] [] actor_type target_platform;
+      In_channel.close in_channel;
+    end
+  else if actor_type = "sdf" then
+    begin
+      print_endline "The actor type is SDF.";
+      let filename2 = Sys.argv.(3) in
+      print_endline "The solved sequence is in file:";
+      print_endline filename2;
+      print_endline " ";
+      let in_channel2 = Core.In_channel.create filename2 in
+      let lexbuf2 = Lexing.from_channel in_channel2 in
+      lexbuf2.lex_curr_p <- 
+        { lexbuf2.lex_curr_p with pos_fname = filename2 };
+      let (sequences, sizes) = find_sequence lexbuf2 in
+      let target_platform = Sys.argv.(4) in
+      (*Ensure that the target platform is supported*)
+      if (target_platform <> "multithread") && (target_platform <> "multicore") && (target_platform <> "singlethread") then
+        begin
+          print_endline "The target platform is not supported. Please choose one of the following:";
+          print_endline "multithread";
+          print_endline "multicore";
+          print_endline "singlethread";
+          exit (-1)
+        end;
+      parse_with_error lexbuf sequences sizes actor_type target_platform;
+      print_endline "The sequence is:";
+      List.iter print_endline (List.nth sequences 0);
+      print_endline "The channel sizes are:";
+      List.iter print_endline sizes;
+      In_channel.close in_channel;
+      In_channel.close in_channel2;
+    end
+  else
+    begin
+      print_endline "The actor type is not supported. Please choose one of the following:";
+      print_endline "sy";
+      print_endline "sdf";
       exit (-1)
     end;
-  parse_with_error lexbuf sequences sizes target_platform;
-  print_endline "The sequence is:";
-  List.iter print_endline (List.nth sequences 0);
-  print_endline "The channel sizes are:";
-  List.iter print_endline sizes;
-  In_channel.close in_channel;
-  In_channel.close in_channel2;
   

@@ -19,7 +19,7 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 # Steps to build and run the compiler for a toy SDF sequence example - single thread
 1. go to transpiler directory
 2. run "make"
-3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl singlethread"
+3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl sdf ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl singlethread"
 4. This will make a c file called "../example-c-implementation/output.c"
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
 6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
@@ -28,7 +28,7 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 # Steps to build and run the compiler for a toy SDF sequence example - multi thread
 1. go to transpiler directory
 2. run "make"
-3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl multithread"
+3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl sdf ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl multithread"
 4. This will make a c file called "../example-c-implementation/output.c"
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
 6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
@@ -37,13 +37,13 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 # Steps to build and run the compiler for a toy SDF sequence example - multi core
 1. go to transpiler directory
 2. run "make"
-3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl multicore"
+3. run "./transpiler ../fiodl-files/toy_sequence_example.fiodl sdf ../fiodl-files/body_0_ForSyDeDesignModel_ForSyDeIOScalaModule.fiodl multicore"
 4. This will make a c file called "../example-c-implementation/output.c"
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
 6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
 7. It takes input tokens (one integers at a time) from the input file automatically and it will produce outputs (one integers at a time) to stdout. On my system it takes about 15 seconds to run this example.
 
-# Steps to build and run the toy sequence example using GHC for single thread/ multi thread/ multi core
+# Steps to build and run the toy SDF sequence example using GHC for single thread/ multi thread/ multi core
 1. Open a powershell terminal
 2. go to haskell-files directory
 3. "D:\ghcup\ghc\9.6.3\bin\ghc.exe -O2 -threaded --make -main-is SDF_System_Model .\toy_sequence_example.hs"
@@ -53,3 +53,13 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 7. Time the executable to use two cores using "Measure-Command {.\toy_sequence_example.exe +RTS -N2}". This takes about 20 seconds on my system.
 8. Run the executable to use four cores using ".\toy_sequence_example.exe +RTS -N4"
 9. Time the executable to use four cores using "Measure-Command {.\toy_sequence_example.exe +RTS -N4}". This takes about 18 seconds on my system.
+
+
+# Steps to build and run the compiler for a toy SY sequence example - single thread
+1. go to transpiler directory
+2. run "make"
+3. run "./transpiler ../fiodl-files/SY_sequential_example.fiodl sy singlethread"
+4. This will make a c file called "../example-c-implementation/output.c"
+5. Compile this c file using "gcc ../example-c-implementation/output.c"
+6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
+7. It takes 50 input tokens from the input file automatically, then pass them through 4 mapSY and it will produce outputs (50 integers) to stdout. On my system it takes about 35 seconds to run this example.
