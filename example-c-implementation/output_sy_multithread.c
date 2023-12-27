@@ -18,14 +18,135 @@ Signal** s_1;
 Signal** s_2;
 Signal** s_3;
 Signal** s_out;
+HANDLE mutex_s_in;
+HANDLE mutex_s_1;
+HANDLE mutex_s_2;
+HANDLE mutex_s_3;
+HANDLE mutex_s_out;
 
 void *loop0(void* arg)
 {
+    int threadId = *((int *)arg);
+
+	// aquire mutex for both input and output signals
+	WaitForSingleObject(mutex_s_in, INFINITE);
+	WaitForSingleObject(mutex_s_1, INFINITE);
+
+    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+
+	/* Vertex p_1 */
+	mapSY(f, *s_in, s_1);
+
+	printf("Thread %d is finished\n", threadId);
+
+	// release mutex for both input and output signals
+	ReleaseMutex(mutex_s_1);
+	ReleaseMutex(mutex_s_in);
+}	
+
+
+void *loop1(void* arg)
+{
+    int threadId = *((int *)arg);
+
+	// aquire mutex for both input and output signals
+	WaitForSingleObject(mutex_s_2, INFINITE);
+	WaitForSingleObject(mutex_s_1, INFINITE);
+
+    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+		
+    /* Vertex p_2 */
+	mapSY(f, *s_1, s_2);
+
+	printf("Thread %d is finished\n", threadId);
+
+	// release mutex for both input and output signals
+	ReleaseMutex(mutex_s_1);
+	ReleaseMutex(mutex_s_2);
+}
+
+void *loop2(void* arg)
+{
+    int threadId = *((int *)arg);
+
+	// aquire mutex for both input and output signals
+	WaitForSingleObject(mutex_s_3, INFINITE);
+	WaitForSingleObject(mutex_s_2, INFINITE);
+
+    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+	
+	/* Vertex p_3 */
+	mapSY(f, *s_2, s_3);
+
+	printf("Thread %d is finished\n", threadId);
+
+	// release mutex for both input and output signals
+	ReleaseMutex(mutex_s_2);
+	ReleaseMutex(mutex_s_3);
+}
+
+void *loop3(void* arg)
+{
+    int threadId = *((int *)arg);
+
+	// aquire mutex for both input and output signals
+	WaitForSingleObject(mutex_s_out, INFINITE);
+	WaitForSingleObject(mutex_s_3, INFINITE);
+
+    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+		
+	/* Vertex p_4 */
+	mapSY(f, *s_3, s_out);
+
+	printf("Thread %d is finished\n", threadId);
+
+	// release mutex for both input and output signals
+	ReleaseMutex(mutex_s_3);
+	ReleaseMutex(mutex_s_out);
+}
+
+int main(int argc, char *argv[]) {
 	int input;
 	int output;
 
-    int threadId = *((int *)arg);
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+	// Check if the correct number of command-line arguments is provided
+	if (argc != 2) {
+		fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+		return 1; // Return an error code
+	}
+	
+	// Open the file for reading
+	file = fopen(argv[1], "r");
+
+	// Check if the file opened successfully
+	if (file == NULL) {
+		fprintf(stderr, "Unable to open the file '%s' for reading.\n", argv[1]);
+		return 1; // Return an error code
+	}
+
+	// Allocate memory for Signal structures
+
+	s_in = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_in = NULL;
+
+	s_1 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_1 = NULL;
+
+	s_2 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_2 = NULL;
+
+	s_3 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_3 = NULL;
+
+	s_out = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_out = NULL;
+
+	// make mutexes for each signal
+	mutex_s_in = CreateMutex(NULL, TRUE, NULL);
+	mutex_s_1 = CreateMutex(NULL, TRUE, NULL);
+	mutex_s_2 = CreateMutex(NULL, TRUE, NULL);
+	mutex_s_3 = CreateMutex(NULL, TRUE, NULL);
+	mutex_s_out = CreateMutex(NULL, TRUE, NULL);
 
 	while(1)
 	{		
@@ -59,98 +180,6 @@ void *loop0(void* arg)
 			break;
 		}
 	}
-
-	/* Vertex p_1 */
-	mapSY(f, *s_in, s_1);	
-
-	printf("Output:");
-	struct Signal *current = *s_out;
-	while (current != NULL)
-	{
-		printf("%d\n", current->data);
-		current = current->next;
-	}
-}
-
-void *loop1(void* arg)
-{
-	int input;
-	int output;
-
-    int threadId = *((int *)arg);
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
-
-	while(1){
-		
-    /* Vertex p_2 */
-	mapSY(f, *s_1, s_2);
-
-	}
-}
-
-void *loop2(void* arg)
-{
-	int input;
-	int output;
-
-    int threadId = *((int *)arg);
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
-
-	while(1){
-		
-	/* Vertex p_3 */
-	mapSY(f, *s_2, s_3);
-
-	}
-}
-
-void *loop3(void* arg)
-{
-	int input;
-	int output;
-
-    int threadId = *((int *)arg);
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
-
-	while(1){
-		
-	/* Vertex p_4 */
-	mapSY(f, *s_3, s_out);
-	
-	}
-}
-int main(int argc, char *argv[]) {
-	// Check if the correct number of command-line arguments is provided
-	if (argc != 2) {
-		fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
-		return 1; // Return an error code
-	}
-	
-	// Open the file for reading
-	file = fopen(argv[1], "r");
-
-	// Check if the file opened successfully
-	if (file == NULL) {
-		fprintf(stderr, "Unable to open the file '%s' for reading.\n", argv[1]);
-		return 1; // Return an error code
-	}
-
-	// Allocate memory for Signal structures
-
-	s_in = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_in = NULL;
-
-	s_1 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_1 = NULL;
-
-	s_2 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_2 = NULL;
-
-	s_3 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_3 = NULL;
-
-	s_out = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_out = NULL;
 
 	int num_threads = 4;
     HANDLE threads[num_threads];
@@ -194,12 +223,28 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// release mutexes
+	ReleaseMutex(mutex_s_in);
+	ReleaseMutex(mutex_s_1);
+	Sleep(1000);
+	ReleaseMutex(mutex_s_2);
+	ReleaseMutex(mutex_s_3);
+	ReleaseMutex(mutex_s_out);
+
 	// Wait for threads to finish
 	WaitForMultipleObjects(num_threads, threads, TRUE, INFINITE);
 
 	// Close thread handles
 	for (int i = 0; i < num_threads; ++i) {
 		CloseHandle(threads[i]);
+	}
+
+	printf("Output:");
+	struct Signal *current = *s_out;
+	while (current != NULL)
+	{
+		printf("%d\n", current->data);
+		current = current->next;
 	}
 
 	return 0;
