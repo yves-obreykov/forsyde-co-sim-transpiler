@@ -43,17 +43,40 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
 7. It takes input tokens (one integers at a time) from the input file automatically and it will produce outputs (one integers at a time) to stdout. On my system it takes about 15 seconds to run this example.
 
-# Steps to build and run the toy SDF sequence example using GHC for single thread/ multi thread/ multi core
+# Steps to build and run the toy SDF sequence example using GHC for single thread
 1. Open a powershell terminal
 2. go to haskell-files directory
 3. "D:\ghcup\ghc\9.6.3\bin\ghc.exe -O2 -threaded --make -main-is SDF_System_Model .\toy_sequence_example.hs"
-4. Run the executable to use one core using ".\toy_sequence_example.exe +RTS -N1"
+4. Run the executable to use one thread using ".\toy_sequence_example.exe +RTS -N1"
 5. Time the executable to use one core using "Measure-Command {.\toy_sequence_example.exe +RTS -N1}". This takes about 27 seconds on my system.
-6. Run the executable to use two cores using ".\toy_sequence_example.exe +RTS -N2"
-7. Time the executable to use two cores using "Measure-Command {.\toy_sequence_example.exe +RTS -N2}". This takes about 20 seconds on my system.
-8. Run the executable to use four cores using ".\toy_sequence_example.exe +RTS -N4"
-9. Time the executable to use four cores using "Measure-Command {.\toy_sequence_example.exe +RTS -N4}". This takes about 18 seconds on my system.
 
+# Steps to build and run the toy SDF sequence example using GHC for multi thread
+1. Open a powershell terminal
+2. go to haskell-files directory
+3. input:
+     executablePath = "path to \toy_sequence_example.exe(customized)"
+4. input:
+     affinityMask = 0x1  # Set affinity to the first core (you can adjust this as needed)
+5: input:
+     executionResult = Measure-Command {
+     process = Start-Process -FilePath $executablePath -ArgumentList "+RTS -N4" -PassThru -NoNewWindow
+     process.ProcessorAffinity = $affinityMask
+     process.WaitForExit()
+    }
+6. Time the executable to use four threads on one core:
+     executionResult | Format-List
+
+# Steps to build and run the toy SDF sequence example using GHC for multi core
+1. Open a powershell terminal
+2. go to haskell-files directory
+3. "D:\ghcup\ghc\9.6.3\bin\ghc.exe -O2 -threaded --make -main-is SDF_System_Model .\toy_sequence_example.hs"
+4. Run the executable to use one thread using ".\toy_sequence_example.exe +RTS -N1"
+5. Time the executable to use one thread using "Measure-Command {.\toy_sequence_example.exe +RTS -N1}". This takes about 27 seconds on my system.
+6. Run the executable to use two threads using ".\toy_sequence_example.exe +RTS -N2"
+7. Time the executable to use two threads using "Measure-Command {.\toy_sequence_example.exe +RTS -N2}". This takes about 20 seconds on my system.
+8. Run the executable to use four threads using ".\toy_sequence_example.exe +RTS -N4"
+9. Time the executable to use four threads using "Measure-Command {.\toy_sequence_example.exe +RTS -N4}". This takes about 18 seconds on my system.
+(The cores will be used randomly because we didn't limit the number of cores, it uses multi-core under this circumstance.)
 
 # Steps to build and run the compiler for a toy SY sequence example - single thread
 1. go to transpiler directory
