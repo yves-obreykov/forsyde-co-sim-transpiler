@@ -86,3 +86,21 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
 6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
 7. It takes 50 input tokens from the input file automatically, then pass them through 4 mapSY and it will produce outputs (50 integers) to stdout. On my system it takes about 35 seconds to run this example.
+
+# Steps to build and run the compiler for a toy SY sequence example - multi thread
+1. go to transpiler directory
+2. run "make"
+3. run "./transpiler ../fiodl-files/SY_sequential_example.fiodl sy multithread"
+4. This will make a c file called "../example-c-implementation/output.c"
+5. Compile this c file using "gcc ../example-c-implementation/output.c"
+6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
+7. It takes 50 input tokens from the input file automatically, then pass them through 4 mapSY and it will produce outputs (50 integers) to stdout. On my system it takes about 35 seconds to run this example.
+
+# Steps to build and run the compiler for a toy SY sequence example - multi core
+1. go to transpiler directory
+2. run "make"
+3. run "./transpiler ../fiodl-files/SY_sequential_example.fiodl sy multicore"
+4. This will make a c file called "../example-c-implementation/output.c"
+5. Compile this c file using "gcc ../example-c-implementation/output.c"
+6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
+7. It takes 50 input tokens from the input file automatically, then pass them through 4 mapSY and it will produce outputs (50 integers) to stdout. On my system it takes about 35 seconds to run this example.

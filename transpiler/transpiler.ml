@@ -35,7 +35,10 @@ let parse_with_error lexbuf sequences sizes actor_type target_platform =
   print_endline ("Making C code...");
   if actor_type = "sy" then
     begin
-    make_c_code_simple_sy sequences sizes target_platform res2
+    if (target_platform = "multithread") || (target_platform = "multicore") then
+      make_c_code_threads_sy sequences sizes target_platform res2
+    else
+      make_c_code_simple_sy sequences sizes target_platform res2
     end
   else
     begin
