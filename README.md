@@ -63,6 +63,7 @@ The Forsyde co-sim transpiler is an open source project which aims to be a sourc
      process.ProcessorAffinity = $affinityMask
      process.WaitForExit()
     }
+   (N4 can be adjusted as needed.)
 6. Time the executable to use four threads on one core:
      executionResult | Format-List
 
