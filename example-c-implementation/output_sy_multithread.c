@@ -9,9 +9,9 @@ int f(int a){
 	int res;
 	res = a;
 	for (int i = 0; i < 100000000; i++) {
-        res *= (-1);
-    }
-    return res;
+		res *= (-1);
+	}
+	return res;
 }
 
 FILE *file;
@@ -28,13 +28,12 @@ HANDLE mutex_s_out;
 
 void *loop0(void* arg)
 {
-    int threadId = *((int *)arg);
+	int threadId = *((int *)arg);
 
 	// aquire mutex for both input and output signals
 	WaitForSingleObject(mutex_s_1, INFINITE);
-	WaitForSingleObject(mutex_s_in, INFINITE);
-
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+	
+	printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
 
 	/* Vertex p_1 */
 	mapSY(f, *s_in, s_1);
@@ -42,22 +41,21 @@ void *loop0(void* arg)
 	printf("Thread %d is finished\n", threadId);
 
 	// release mutex for both input and output signals
-	ReleaseMutex(mutex_s_in);
 	ReleaseMutex(mutex_s_1);
-}	
+}
 
 
 void *loop1(void* arg)
 {
-    int threadId = *((int *)arg);
+	int threadId = *((int *)arg);
 
 	// aquire mutex for both input and output signals
 	WaitForSingleObject(mutex_s_2, INFINITE);
 	WaitForSingleObject(mutex_s_1, INFINITE);
+	
+	printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
 
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
-		
-    /* Vertex p_2 */
+	/* Vertex p_2 */
 	mapSY(f, *s_1, s_2);
 
 	printf("Thread %d is finished\n", threadId);
@@ -70,14 +68,14 @@ void *loop1(void* arg)
 
 void *loop2(void* arg)
 {
-    int threadId = *((int *)arg);
+	int threadId = *((int *)arg);
 
 	// aquire mutex for both input and output signals
 	WaitForSingleObject(mutex_s_3, INFINITE);
 	WaitForSingleObject(mutex_s_2, INFINITE);
-
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
 	
+	printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
+
 	/* Vertex p_3 */
 	mapSY(f, *s_2, s_3);
 
@@ -91,14 +89,14 @@ void *loop2(void* arg)
 
 void *loop3(void* arg)
 {
-    int threadId = *((int *)arg);
+	int threadId = *((int *)arg);
 
 	// aquire mutex for both input and output signals
 	WaitForSingleObject(mutex_s_out, INFINITE);
 	WaitForSingleObject(mutex_s_3, INFINITE);
+	
+	printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
 
-    printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
-		
 	/* Vertex p_4 */
 	mapSY(f, *s_3, s_out);
 
@@ -128,46 +126,46 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "Unable to open the file '%s' for reading.\n", argv[1]);
 		return 1; // Return an error code
 	}
-
+	
 	// Allocate memory for Signal structures
 
 	s_in = (struct Signal **)malloc(sizeof(struct Signal *));
 	*s_in = NULL;
-
+	
 	s_1 = (struct Signal **)malloc(sizeof(struct Signal *));
 	*s_1 = NULL;
-
+	
 	s_2 = (struct Signal **)malloc(sizeof(struct Signal *));
 	*s_2 = NULL;
-
+	
 	s_3 = (struct Signal **)malloc(sizeof(struct Signal *));
 	*s_3 = NULL;
-
+	
 	s_out = (struct Signal **)malloc(sizeof(struct Signal *));
 	*s_out = NULL;
-
-	// make mutexes for each signal
+	
+// make mutexes for each signal
 	mutex_s_in = CreateMutex(NULL, TRUE, NULL);
 	mutex_s_1 = CreateMutex(NULL, TRUE, NULL);
 	mutex_s_2 = CreateMutex(NULL, TRUE, NULL);
 	mutex_s_3 = CreateMutex(NULL, TRUE, NULL);
 	mutex_s_out = CreateMutex(NULL, TRUE, NULL);
-
-	while(1)
-	{		
-		if(fscanf(file, "%d", &input) == 1) 
+	
+while(1)
+		{
+			if(fscanf(file, "%d", &input) == 1)
 		{
 			printf("Read 1 input tokens: ");
 			printf("%d\n", input);
 			
-			// Allocate memory for Signal structure
-            if(*s_in == NULL)
+		// Allocate memory for Signal structure
+		if(*s_in == NULL)
 			{
 				*s_in = (struct Signal *)malloc(sizeof(struct Signal));
 				(*s_in)->data = input;
 				(*s_in)->next = NULL;
 			}
-			else
+		else
 			{
 				struct Signal *current = *s_in;
 				while (current->next != NULL)
@@ -179,7 +177,7 @@ int main(int argc, char *argv[]) {
 				current->next->next = NULL;
 			}
 		}
-	else {
+		else {
 			printf("End of file reached.\n");
 			fclose(file);
 			break;
@@ -187,38 +185,38 @@ int main(int argc, char *argv[]) {
 	}
 
 	int num_threads = 4;
-    HANDLE threads[num_threads];
-    int threadIds[num_threads];
+	HANDLE threads[num_threads];
+	int threadIds[num_threads];
 
-    // Create and run threads
+	// Create and run threads	
 	threadIds[0] = 0;
 	threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)loop0, (LPVOID)&threadIds[0], 0, NULL);
 	if (threads[0] == NULL) {
 		fprintf(stderr, "Error creating thread %d\n", 0);
 		exit(EXIT_FAILURE);
 	}
-
+	
 	threadIds[1] = 1;
 	threads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)loop1, (LPVOID)&threadIds[1], 0, NULL);
 	if (threads[1] == NULL) {
 		fprintf(stderr, "Error creating thread %d\n", 1);
 		exit(EXIT_FAILURE);
 	}
-
+	
 	threadIds[2] = 2;
 	threads[2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)loop2, (LPVOID)&threadIds[2], 0, NULL);
 	if (threads[2] == NULL) {
 		fprintf(stderr, "Error creating thread %d\n", 2);
 		exit(EXIT_FAILURE);
 	}
-
+	
 	threadIds[3] = 3;
 	threads[3] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)loop3, (LPVOID)&threadIds[3], 0, NULL);
 	if (threads[3] == NULL) {
 		fprintf(stderr, "Error creating thread %d\n", 3);
 		exit(EXIT_FAILURE);
 	}
-
+	
 	// Set affinity for each thread using SetThreadAffinityMask
 	for (int i = 0; i < num_threads; ++i) {
 		DWORD_PTR affinityMask = 1ULL << 0; // Set affinity always to CPU0
@@ -227,7 +225,7 @@ int main(int argc, char *argv[]) {
 			exit(EXIT_FAILURE);
 		}
 	}
-
+	
 	// Release the mutexes
 	ReleaseMutex(mutex_s_in);
 	Sleep(1);
@@ -242,14 +240,15 @@ int main(int argc, char *argv[]) {
 	
 	// Wait for threads to finish
 	WaitForMultipleObjects(num_threads, threads, TRUE, INFINITE);
-
+	
 	// Close thread handles
 	for (int i = 0; i < num_threads; ++i) {
 		CloseHandle(threads[i]);
 	}
 
-	printf("Output:");
-	struct Signal *current = *s_out;
+	struct Signal* current = NULL;
+	printf("Output s_out:");
+	current = *s_out;
 	while (current != NULL)
 	{
 		printf("%d\n", current->data);

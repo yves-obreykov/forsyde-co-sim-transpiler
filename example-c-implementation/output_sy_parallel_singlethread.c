@@ -13,10 +13,10 @@ int f(int a){
 
 FILE *file;
 Signal **s_in;
-Signal **s_1;
-Signal **s_2;
-Signal **s_3;
-Signal **s_out;
+Signal **s_out1;
+Signal **s_out2;
+Signal **s_out3;
+Signal **s_out4;
 
 void *loop0(void* arg)
 {
@@ -57,20 +57,44 @@ void *loop0(void* arg)
 	}
 
 	/* Vertex p_1 */
-	mapSY(f, *s_in, s_1);
+	mapSY(f, *s_in, s_out1);
 
 	/* Vertex p_2 */
-	mapSY(f, *s_1, s_2);
+	mapSY(f, *s_in, s_out2);
 
 	/* Vertex p_3 */
-	mapSY(f, *s_2, s_3);
+	mapSY(f, *s_in, s_out3);
 
 	/* Vertex p_4 */
-	mapSY(f, *s_3, s_out);
+	mapSY(f, *s_in, s_out4);
 
 struct Signal* current = NULL;
-	printf("Output s_out:");
-	current = *s_out;
+	printf("Output s_out1:");
+	current = *s_out1;
+	while (current != NULL)
+	{
+		printf("%d\n", current->data);
+		current = current->next;
+	}
+
+	printf("Output s_out2:");
+	current = *s_out2;
+	while (current != NULL)
+	{
+		printf("%d\n", current->data);
+		current = current->next;
+	}
+
+	printf("Output s_out3:");
+	current = *s_out3;
+	while (current != NULL)
+	{
+		printf("%d\n", current->data);
+		current = current->next;
+	}
+
+	printf("Output s_out4:");
+	current = *s_out4;
 	while (current != NULL)
 	{
 		printf("%d\n", current->data);
@@ -100,17 +124,17 @@ int main(int argc, char *argv[]) {
 	s_in = (struct Signal **)malloc(sizeof(struct Signal *));
 	*s_in = NULL;
 	
-	s_1 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_1 = NULL;
+	s_out1 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_out1 = NULL;
 	
-	s_2 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_2 = NULL;
+	s_out2 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_out2 = NULL;
 	
-	s_3 = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_3 = NULL;
+	s_out3 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_out3 = NULL;
 	
-	s_out = (struct Signal **)malloc(sizeof(struct Signal *));
-	*s_out = NULL;
+	s_out4 = (struct Signal **)malloc(sizeof(struct Signal *));
+	*s_out4 = NULL;
 	
 	loop0(NULL);
 

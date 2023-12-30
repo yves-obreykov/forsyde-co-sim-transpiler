@@ -1,5 +1,6 @@
 open Hybrid_ir
 open Printf
+open Str
 
 
 let make_c_header = 
@@ -53,7 +54,13 @@ let extract_size name sizes =
           find_size name rest
   in
   find_size name sizes
-    
+
+let check_string_contains s1 s2 =
+  let re = Str.regexp_string s2
+  in
+      try ignore (Str.search_forward re s1 0); true
+      with Not_found -> false  
+  
 let rec make_c_actors identified_functions actor_calls buffer_declaration buffer_creations sequences sizes = function
   | [] -> (identified_functions, actor_calls, buffer_declaration, buffer_creations)
   | IRSDFActor(name, attrl, signall, paraml, ir_IO_nr)::tl ->
@@ -470,7 +477,33 @@ let make_c_code_simple_sy sequences sizes target_platform = function
     x ^ ";\n\n"
   )) (List.rev (List.tl (List.rev (String.split_on_char ';' function_calls))));
 
-  fprintf oc "%s" (
+  (* Find signals of the pattern s_out* and print them *)
+  fprintf oc "struct Signal* current = NULL;\n";
+  let s_out_list = List.filter (fun x -> check_string_contains x "s_out") (String.split_on_char '\n' identified_signals) in
+  List.iter (fun x -> fprintf oc "%s" (
+    let x_list = String.split_on_char ' ' x in
+    if List.length x_list > 1 then
+      begin
+        let signal_name = List.nth x_list 1 in
+        let signal_name = String.sub signal_name 2 (String.length signal_name - 3) in
+        "\t" ^ 
+        "printf(\"Output " ^ signal_name ^ ":\");" ^ "\n\t" ^
+        "current = *" ^ signal_name ^ ";" ^ "\n\t" ^
+        "while (current != NULL)" ^ "\n\t" ^
+        "{" ^ "\n\t\t" ^
+        "printf(\"%d\\n\", current->data);" ^ "\n\t\t" ^
+        "current = current->next;" ^ "\n\t" ^
+        "}" ^ "\n\n" 
+      end
+    else
+      begin
+        ""
+      end
+  )) s_out_list;
+
+  fprintf oc "}\n";
+
+  (* fprintf oc "%s" (
     "\t" ^
     "printf(\"Output:\");" ^ "\n\t" ^
     "struct Signal *current = *s_out;" ^ "\n\t" ^
@@ -480,7 +513,7 @@ let make_c_code_simple_sy sequences sizes target_platform = function
     "current = current->next;" ^ "\n\t" ^
     "}" ^ "\n" ^
     "}" ^ "\n" 
-  );
+  ); *)
   (*Split actor_calls into a list of strings by the delimiter "\@\n"*)
   (* let actor_calls_list = String.split_on_char '@' actor_calls in *)
   (* Iterate over the list of strings and print this header followed by the string *)
@@ -572,8 +605,7 @@ let make_c_code_threads_sy sequences sizes target_platform = function
       {
           int threadId = arg;
 
-        // aquire mutex for both input and output signals
-        WaitForSingleObject(mutex_s_in, INFINITE);
+        // aquire mutex for output signal
         WaitForSingleObject(mutex_s_1, INFINITE);
 
         printf("Thread %d is running on CPU %d\n", threadId, GetCurrentProcessorNumber());
@@ -582,9 +614,8 @@ let make_c_code_threads_sy sequences sizes target_platform = function
 
         printf("Thread %d is finished\n", threadId);
 
-        // release mutex for both input and output signals
+        // release mutex for output signal
         ReleaseMutex(mutex_s_1);
-        ReleaseMutex(mutex_s_in);
       }	
     *)
     List.iter (fun x -> fprintf oc "%s" (
@@ -598,13 +629,20 @@ let make_c_code_threads_sy sequences sizes target_platform = function
       "int threadId = *((int *)arg);\n\n\t" ^
       "// aquire mutex for both input and output signals\n\t" ^
       "WaitForSingleObject(mutex_" ^ to_signal ^ ", INFINITE);\n\t" ^
-      "WaitForSingleObject(mutex_" ^ from_signal ^ ", INFINITE);\n\n\t" ^
+      (if from_signal = "s_in" then
+        ""
+      else
+        "WaitForSingleObject(mutex_" ^ from_signal ^ ", INFINITE);\n\t") ^
+      "\n\t" ^
       "printf(\"Thread %d is running on CPU %d\\n\", threadId, GetCurrentProcessorNumber());\n\n" ^
       vertex_name ^ "\n" ^
       func_call ^ ";\n\n\t" ^
       "printf(\"Thread %d is finished\\n\", threadId);\n\n\t" ^
       "// release mutex for both input and output signals\n\t" ^
-      "ReleaseMutex(mutex_" ^ from_signal ^ ");\n\t" ^
+      (if from_signal = "s_in" then
+        ""
+      else
+        "ReleaseMutex(mutex_" ^ from_signal ^ ");\n\t") ^
       "ReleaseMutex(mutex_" ^ to_signal ^ ");\n" ^
       "}\n\n"
     )) (List.rev (List.tl (List.rev (String.split_on_char ';' function_calls))));
@@ -805,8 +843,31 @@ let make_c_code_threads_sy sequences sizes target_platform = function
       "}" ^ "\n\n\t"
     );
     
+    (* Find signals of the pattern s_out* and print them *)
+    fprintf oc "struct Signal* current = NULL;\n";
+    let s_out_list = List.filter (fun x -> check_string_contains x "s_out") (String.split_on_char '\n' identified_signals) in
+    List.iter (fun x -> fprintf oc "%s" (
+      let x_list = String.split_on_char ' ' x in
+      if List.length x_list > 1 then
+        begin
+          let signal_name = List.nth x_list 1 in
+          let signal_name = String.sub signal_name 2 (String.length signal_name - 3) in
+          "\t" ^ 
+          "printf(\"Output " ^ signal_name ^ ":\");" ^ "\n\t" ^
+          "current = *" ^ signal_name ^ ";" ^ "\n\t" ^
+          "while (current != NULL)" ^ "\n\t" ^
+          "{" ^ "\n\t\t" ^
+          "printf(\"%d\\n\", current->data);" ^ "\n\t\t" ^
+          "current = current->next;" ^ "\n\t" ^
+          "}" ^ "\n\n" 
+        end
+      else
+        begin
+          ""
+        end
+    )) s_out_list;
 
-    fprintf oc "%s" (
+    (* fprintf oc "%s" (
       "\t" ^
       "printf(\"Output:\");" ^ "\n\t" ^
       "struct Signal *current = *s_out;" ^ "\n\t" ^
@@ -815,7 +876,7 @@ let make_c_code_threads_sy sequences sizes target_platform = function
       "printf(\"%d\\n\", current->data);" ^ "\n\t\t" ^
       "current = current->next;" ^ "\n\t" ^
       "}" ^ "\n\n" 
-    );  
+    );   *)
   
 
     fprintf oc "%s" make_c_footer;
