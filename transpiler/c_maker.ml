@@ -503,27 +503,6 @@ let make_c_code_simple_sy sequences sizes target_platform = function
 
   fprintf oc "}\n";
 
-  (* fprintf oc "%s" (
-    "\t" ^
-    "printf(\"Output:\");" ^ "\n\t" ^
-    "struct Signal *current = *s_out;" ^ "\n\t" ^
-    "while (current != NULL)" ^ "\n\t" ^
-    "{" ^ "\n\t\t" ^
-    "printf(\"%d\\n\", current->data);" ^ "\n\t\t" ^
-    "current = current->next;" ^ "\n\t" ^
-    "}" ^ "\n" ^
-    "}" ^ "\n" 
-  ); *)
-  (*Split actor_calls into a list of strings by the delimiter "\@\n"*)
-  (* let actor_calls_list = String.split_on_char '@' actor_calls in *)
-  (* Iterate over the list of strings and print this header followed by the string *)
-  (* List.iter (fun x -> fprintf oc "%s" ( *)
-    (* "\n" ^ x ^ "\n") ) actor_calls_list; *)
-  
-  (* fprintf oc "%s" ( *)
-    (* "\t}\n}\n" *)
-  (* ); *)
-
   fprintf oc "%s" (
     "\n" ^ 
     "int main(int argc, char *argv[]) {" ^ "\n\t" ^
@@ -559,10 +538,6 @@ let make_c_code_simple_sy sequences sizes target_platform = function
       end
   )) (String.split_on_char '\n' identified_signals);
 
-
-
-  (* fprintf oc "%s" buffer_creations; *)
-
   fprintf oc "%s" "\n\tloop0(NULL);\n\n";
 
   fprintf oc "%s" make_c_footer;
@@ -579,8 +554,6 @@ let make_c_code_threads_sy sequences sizes target_platform = function
       "#include <windows.h>" ^ "\n" ^
       "#include \"c-skeletons-for-SY.c\"\n\n"
     );
-    (* let (identified_functions, actor_calls, buffer_declaration, buffer_creations) = make_c_actors "" "" "" "" sequences sizes vl in *)
-    (* fprintf oc "%s" identified_functions; *)
     let (identified_functions, function_calls, identified_signals) = sy_find_functions_and_signals "" "" "" vl in
     fprintf oc "%s" identified_functions;
     fprintf oc "%s" "\nFILE *file;\n";
@@ -866,18 +839,6 @@ let make_c_code_threads_sy sequences sizes target_platform = function
           ""
         end
     )) s_out_list;
-
-    (* fprintf oc "%s" (
-      "\t" ^
-      "printf(\"Output:\");" ^ "\n\t" ^
-      "struct Signal *current = *s_out;" ^ "\n\t" ^
-      "while (current != NULL)" ^ "\n\t" ^
-      "{" ^ "\n\t\t" ^
-      "printf(\"%d\\n\", current->data);" ^ "\n\t\t" ^
-      "current = current->next;" ^ "\n\t" ^
-      "}" ^ "\n\n" 
-    );   *)
-  
 
     fprintf oc "%s" make_c_footer;
     close_out oc

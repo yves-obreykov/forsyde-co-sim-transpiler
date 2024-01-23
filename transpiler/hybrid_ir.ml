@@ -7,7 +7,7 @@ type ir_systemgraph =
 
 and ir_vertex = 
   | IRSDFActor of string * attr list * signal list * param list * ir_IO_nr
-  | IRSDFChannel of string * attr list * signal list * param list (* TODO: maybe we want input output identifier names?*)
+  | IRSDFChannel of string * attr list * signal list * param list
   | IRSYActor of string * attr list * signal list * param list * ir_SY_IO_nr
   | IRSYSignal of string * attr list * signal list * param list
   | IRSYFunction of string * attr list * signal list * param list
@@ -85,24 +85,6 @@ let rec ident_vertex_type name attrl signall paraml =
     -> IRSYFunction(name, attr_tl, signall, paraml)
   | _::attr_tl -> ident_vertex_type name attr_tl signall paraml
   | [] -> IRUnkownVertex(name, attrl, signall, paraml)
-(* 
-  | AttributeOne(value)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeTwo(value1, value2)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeThree(value1, value2, value3)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeFour(value1, value2, value3, value4)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeFive(value1, value2, value3, value4, value5)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeSix(value1, value2, value3, value4, value5, value6)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeSeven(value1, value2, value3, value4, value5, value6, value7)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | AttributeEight(value1, value2, value3, value4, value5, value6, value7, value8)::attr_tl
-    -> IRUnkownVertex(name, attrl, signall, paraml)
-  | _ -> failwith "There is an attribute that has not been implemented yet." *)
 
 let rec make_ir_edge_list = function
   | Edge(attrl, signal1, port1, signal2, port2)::tl -> IREdge(attrl, signal1, port1, signal2, port2)::(make_ir_edge_list tl)

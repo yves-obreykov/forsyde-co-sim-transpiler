@@ -89,40 +89,6 @@ let pprint_systemgraph = function
   | None -> "No systemgraph found\n"
 
 
-(* Find "superLoopEntries" in vertex "os0" *)
-(* let find_super_loop = function
-| Some Systemgraph(vl, el) ->
-  let rec find_super_loop_vertex = function
-    | [] -> None
-    | Vertex(name, attrl, signall, paraml)::tl ->
-      if name = "os0" then
-        let rec find_super_loop_param = function
-          | [] -> None
-          | ParamLeaf(name, valuel)::tl ->
-              (find_super_loop_param tl)
-          | ParamNode(name, paraml)::tl ->
-            if name = "superLoopEntries" then
-              (Some paraml)
-            else
-              (find_super_loop_param tl)
-        in
-        find_super_loop_param paraml
-      else
-        find_super_loop_vertex tl
-  in
-  let res = find_super_loop_vertex vl
-  in
-  (match res with
-  | Some vl ->
-    let rec pprint_param_list = function
-      | [] -> []
-      | ParamLeaf(name, valuel)::tl -> name :: pprint_param_list tl
-      | ParamNode(name, paraml)::tl -> pprint_param_list tl
-    in
-    pprint_param_list vl
-  | None -> [])
-| None -> [] *)
-
 
 let find_super_loop = function
 | Some Systemgraph(vl, el) ->
@@ -166,9 +132,6 @@ let find_super_loop = function
   in
   (List.map pprint_param_list res2)
 | None -> []
-
-        
-    
 
 
 
