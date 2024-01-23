@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="C_maker.html">
+<link rel="next" href="Lexer.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="C_maker" rel="Chapter" href="C_maker.html">
+<link title="Hybrid_ir" rel="Chapter" href="Hybrid_ir.html">
+<link title="Lexer" rel="Chapter" href="Lexer.html">
+<link title="Parser" rel="Chapter" href="Parser.html">
+<link title="Transpiler" rel="Chapter" href="Transpiler.html"><title>Hybrid_ir</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="C_maker.html" title="C_maker">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Lexer.html" title="Lexer">Next</a>
+</div>
+<h1>Module <a href="type_Hybrid_ir.html">Hybrid_ir</a></h1>
+
+<pre><span id="MODULEHybrid_ir"><span class="keyword">module</span> Hybrid_ir</span>: <code class="code">sig</code> <a href="Hybrid_ir.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><code><span id="TYPEir_systemgraph"><span class="keyword">type</span> <code class="type"></code>ir_systemgraph</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_systemgraph.IRSystemgraph"><span class="constructor">IRSystemgraph</span></span> <span class="keyword">of</span> <code class="type"><a href="Hybrid_ir.html#TYPEir_vertex">ir_vertex</a> list * <a href="Hybrid_ir.html#TYPEir_edge">ir_edge</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEir_vertex"><span class="keyword">type</span> <code class="type"></code>ir_vertex</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_vertex.IRSDFActor"><span class="constructor">IRSDFActor</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> list * <a href="Ast.html#TYPEparam">Ast.param</a> list<br>        * <a href="Hybrid_ir.html#TYPEir_IO_nr">ir_IO_nr</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_vertex.IRSDFChannel"><span class="constructor">IRSDFChannel</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> list * <a href="Ast.html#TYPEparam">Ast.param</a> list</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_vertex.IRSYActor"><span class="constructor">IRSYActor</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> list * <a href="Ast.html#TYPEparam">Ast.param</a> list<br>        * <a href="Hybrid_ir.html#TYPEir_SY_IO_nr">ir_SY_IO_nr</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_vertex.IRSYSignal"><span class="constructor">IRSYSignal</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> list * <a href="Ast.html#TYPEparam">Ast.param</a> list</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_vertex.IRSYFunction"><span class="constructor">IRSYFunction</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> list * <a href="Ast.html#TYPEparam">Ast.param</a> list</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_vertex.IRUnkownVertex"><span class="constructor">IRUnkownVertex</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> list * <a href="Ast.html#TYPEparam">Ast.param</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEir_param"><span class="keyword">type</span> <code class="type"></code>ir_param</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_param.IRParamLeaf"><span class="constructor">IRParamLeaf</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEvalue">Ast.value</a> list</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_param.IRParamNode"><span class="constructor">IRParamNode</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEparam">Ast.param</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEir_IO_nr"><span class="keyword">type</span> <code class="type"></code>ir_IO_nr</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_IO_nr.IRActorIOnr"><span class="constructor">IRActorIOnr</span></span> <span class="keyword">of</span> <code class="type">int * int * <a href="Ast.html#TYPEvalue">Ast.value</a> list * <a href="Ast.html#TYPEvalue">Ast.value</a> list * string list * string list<br>        * <a href="Ast.html#TYPEvalue">Ast.value</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEir_SY_IO_nr"><span class="keyword">type</span> <code class="type"></code>ir_SY_IO_nr</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_SY_IO_nr.IRSYActorIOnr"><span class="constructor">IRSYActorIOnr</span></span> <span class="keyword">of</span> <code class="type">int * int * string list * string list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEir_edge"><span class="keyword">type</span> <code class="type"></code>ir_edge</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTir_edge.IREdge"><span class="constructor">IREdge</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEattr">Ast.attr</a> list * <a href="Ast.html#TYPEsignal">Ast.signal</a> * <a href="Ast.html#TYPEport">Ast.port</a> option * <a href="Ast.html#TYPEsignal">Ast.signal</a> * <a href="Ast.html#TYPEport">Ast.port</a> option</code></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="VALnr_of_IO"><span class="keyword">val</span> nr_of_IO</span> : <code class="type"><a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; int</code></pre>
+<pre><span id="VALget_prod_cons_tokens_list"><span class="keyword">val</span> get_prod_cons_tokens_list</span> : <code class="type"><a href="Ast.html#TYPEvalue">Ast.value</a> list -&gt; <a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; <a href="Ast.html#TYPEvalue">Ast.value</a> list</code></pre>
+<pre><span id="VALget_prod_cons_signals_list"><span class="keyword">val</span> get_prod_cons_signals_list</span> : <code class="type">string list -&gt; <a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; string list</code></pre>
+<pre><span id="VALident_i_o"><span class="keyword">val</span> ident_i_o</span> : <code class="type">int * int * <a href="Ast.html#TYPEvalue">Ast.value</a> list * <a href="Ast.html#TYPEvalue">Ast.value</a> list * string list * string list *<br>       <a href="Ast.html#TYPEvalue">Ast.value</a> list -&gt; <a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; <a href="Hybrid_ir.html#TYPEir_IO_nr">ir_IO_nr</a></code></pre>
+<pre><span id="VALident_sy_inputs_outputs"><span class="keyword">val</span> ident_sy_inputs_outputs</span> : <code class="type">int * int * <a href="Ast.html#TYPEvalue">Ast.value</a> list * <a href="Ast.html#TYPEvalue">Ast.value</a> list * string list * string list *<br>       <a href="Ast.html#TYPEvalue">Ast.value</a> list -&gt; <a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; <a href="Hybrid_ir.html#TYPEir_SY_IO_nr">ir_SY_IO_nr</a></code></pre>
+<pre><span id="VALident_vertex_type"><span class="keyword">val</span> ident_vertex_type</span> : <code class="type">string -&gt;<br>       <a href="Ast.html#TYPEattr">Ast.attr</a> list -&gt; <a href="Ast.html#TYPEsignal">Ast.signal</a> list -&gt; <a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; <a href="Hybrid_ir.html#TYPEir_vertex">ir_vertex</a></code></pre>
+<pre><span id="VALmake_ir_edge_list"><span class="keyword">val</span> make_ir_edge_list</span> : <code class="type"><a href="Ast.html#TYPEedge">Ast.edge</a> list -&gt; <a href="Hybrid_ir.html#TYPEir_edge">ir_edge</a> list</code></pre>
+<pre><span id="VALmake_ir_vertex_list"><span class="keyword">val</span> make_ir_vertex_list</span> : <code class="type"><a href="Ast.html#TYPEvertex">Ast.vertex</a> list -&gt; <a href="Hybrid_ir.html#TYPEir_vertex">ir_vertex</a> list</code></pre>
+<pre><span id="VALmake_hybrid_ir"><span class="keyword">val</span> make_hybrid_ir</span> : <code class="type"><a href="Ast.html#TYPEsystemgraph">Ast.systemgraph</a> option -&gt; <a href="Hybrid_ir.html#TYPEir_systemgraph">ir_systemgraph</a></code></pre>
+<pre><span id="VALpprint_value_list"><span class="keyword">val</span> pprint_value_list</span> : <code class="type"><a href="Ast.html#TYPEvalue">Ast.value</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_ir_param_list"><span class="keyword">val</span> pprint_ir_param_list</span> : <code class="type"><a href="Ast.html#TYPEparam">Ast.param</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_ir_signal_list"><span class="keyword">val</span> pprint_ir_signal_list</span> : <code class="type"><a href="Ast.html#TYPEsignal">Ast.signal</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_string_list"><span class="keyword">val</span> pprint_string_list</span> : <code class="type">string list -&gt; string</code></pre>
+<pre><span id="VALpprint_io"><span class="keyword">val</span> pprint_io</span> : <code class="type"><a href="Hybrid_ir.html#TYPEir_IO_nr">ir_IO_nr</a> -&gt; string</code></pre>
+<pre><span id="VALpprint_sy_io"><span class="keyword">val</span> pprint_sy_io</span> : <code class="type"><a href="Hybrid_ir.html#TYPEir_SY_IO_nr">ir_SY_IO_nr</a> -&gt; string</code></pre>
+<pre><span id="VALpprint_ir_attr_list"><span class="keyword">val</span> pprint_ir_attr_list</span> : <code class="type"><a href="Ast.html#TYPEattr">Ast.attr</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_ir_vertex_list"><span class="keyword">val</span> pprint_ir_vertex_list</span> : <code class="type"><a href="Hybrid_ir.html#TYPEir_vertex">ir_vertex</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_ir_port"><span class="keyword">val</span> pprint_ir_port</span> : <code class="type"><a href="Ast.html#TYPEport">Ast.port</a> option -&gt; string</code></pre>
+<pre><span id="VALpprint_ir_edge_list"><span class="keyword">val</span> pprint_ir_edge_list</span> : <code class="type"><a href="Hybrid_ir.html#TYPEir_edge">ir_edge</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_hybrid_ir"><span class="keyword">val</span> pprint_hybrid_ir</span> : <code class="type"><a href="Hybrid_ir.html#TYPEir_systemgraph">ir_systemgraph</a> -&gt; string</code></pre></body></html>

@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="C_maker.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="C_maker" rel="Chapter" href="C_maker.html">
+<link title="Hybrid_ir" rel="Chapter" href="Hybrid_ir.html">
+<link title="Lexer" rel="Chapter" href="Lexer.html">
+<link title="Parser" rel="Chapter" href="Parser.html">
+<link title="Transpiler" rel="Chapter" href="Transpiler.html"><title>Ast</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="C_maker.html" title="C_maker">Next</a>
+</div>
+<h1>Module <a href="type_Ast.html">Ast</a></h1>
+
+<pre><span id="MODULEAst"><span class="keyword">module</span> Ast</span>: <code class="code">sig</code> <a href="Ast.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><code><span id="TYPEsystemgraph"><span class="keyword">type</span> <code class="type"></code>systemgraph</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsystemgraph.Systemgraph"><span class="constructor">Systemgraph</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEvertex">vertex</a> list * <a href="Ast.html#TYPEedge">edge</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEvertex"><span class="keyword">type</span> <code class="type"></code>vertex</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTvertex.Vertex"><span class="constructor">Vertex</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEattr">attr</a> list * <a href="Ast.html#TYPEsignal">signal</a> list * <a href="Ast.html#TYPEparam">param</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEattr"><span class="keyword">type</span> <code class="type"></code>attr</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeOne"><span class="constructor">AttributeOne</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeTwo"><span class="constructor">AttributeTwo</span></span> <span class="keyword">of</span> <code class="type">string * string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeThree"><span class="constructor">AttributeThree</span></span> <span class="keyword">of</span> <code class="type">string * string * string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeFour"><span class="constructor">AttributeFour</span></span> <span class="keyword">of</span> <code class="type">string * string * string * string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeFive"><span class="constructor">AttributeFive</span></span> <span class="keyword">of</span> <code class="type">string * string * string * string * string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeSix"><span class="constructor">AttributeSix</span></span> <span class="keyword">of</span> <code class="type">string * string * string * string * string * string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeSeven"><span class="constructor">AttributeSeven</span></span> <span class="keyword">of</span> <code class="type">string * string * string * string * string * string * string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTattr.AttributeEight"><span class="constructor">AttributeEight</span></span> <span class="keyword">of</span> <code class="type">string * string * string * string * string * string * string * string</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEsignal"><span class="keyword">type</span> <code class="type"></code>signal</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsignal.Signal"><span class="constructor">Signal</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEparam"><span class="keyword">type</span> <code class="type"></code>param</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTparam.ParamLeaf"><span class="constructor">ParamLeaf</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEvalue">value</a> list</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTparam.ParamNode"><span class="constructor">ParamNode</span></span> <span class="keyword">of</span> <code class="type">string * <a href="Ast.html#TYPEparam">param</a> list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEvalue"><span class="keyword">type</span> <code class="type"></code>value</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTvalue.Value"><span class="constructor">Value</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEedge"><span class="keyword">type</span> <code class="type"></code>edge</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTedge.Edge"><span class="constructor">Edge</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEattr">attr</a> list * <a href="Ast.html#TYPEsignal">signal</a> * <a href="Ast.html#TYPEport">port</a> option * <a href="Ast.html#TYPEsignal">signal</a> * <a href="Ast.html#TYPEport">port</a> option</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEport"><span class="keyword">type</span> <code class="type"></code>port</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTport.Port"><span class="constructor">Port</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="VALpprint_systemgraph"><span class="keyword">val</span> pprint_systemgraph</span> : <code class="type"><a href="Ast.html#TYPEsystemgraph">systemgraph</a> option -&gt; string</code></pre>
+<pre><span id="VALfind_super_loop"><span class="keyword">val</span> find_super_loop</span> : <code class="type"><a href="Ast.html#TYPEsystemgraph">systemgraph</a> option -&gt; string list list</code></pre>
+<pre><span id="VALfind_sdf_channel_sizes"><span class="keyword">val</span> find_sdf_channel_sizes</span> : <code class="type"><a href="Ast.html#TYPEsystemgraph">systemgraph</a> option -&gt; string list</code></pre></body></html>

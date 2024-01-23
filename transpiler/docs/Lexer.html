@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Hybrid_ir.html">
+<link rel="next" href="Parser.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="C_maker" rel="Chapter" href="C_maker.html">
+<link title="Hybrid_ir" rel="Chapter" href="Hybrid_ir.html">
+<link title="Lexer" rel="Chapter" href="Lexer.html">
+<link title="Parser" rel="Chapter" href="Parser.html">
+<link title="Transpiler" rel="Chapter" href="Transpiler.html"><title>Lexer</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Hybrid_ir.html" title="Hybrid_ir">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Parser.html" title="Parser">Next</a>
+</div>
+<h1>Module <a href="type_Lexer.html">Lexer</a></h1>
+
+<pre><span id="MODULELexer"><span class="keyword">module</span> Lexer</span>: <code class="code">sig</code> <a href="Lexer.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><span id="EXCEPTIONSyntaxError"><span class="keyword">exception</span> SyntaxError</span> <span class="keyword">of</span> <code class="type">string</code></pre>
+
+<pre><span id="VALincr_lineno"><span class="keyword">val</span> incr_lineno</span> : <code class="type">Stdlib.Lexing.lexbuf -&gt; unit</code></pre>
+<pre><span id="VAL__ocaml_lex_tables"><span class="keyword">val</span> __ocaml_lex_tables</span> : <code class="type">Stdlib.Lexing.lex_tables</code></pre>
+<pre><span id="VALread"><span class="keyword">val</span> read</span> : <code class="type">Stdlib.Lexing.lexbuf -&gt; Parser.token</code></pre>
+<pre><span id="VAL__ocaml_lex_read_rec"><span class="keyword">val</span> __ocaml_lex_read_rec</span> : <code class="type">Stdlib.Lexing.lexbuf -&gt; int -&gt; Parser.token</code></pre>
+<pre><span id="VALread_string"><span class="keyword">val</span> read_string</span> : <code class="type">Stdlib.Buffer.t -&gt; Stdlib.Lexing.lexbuf -&gt; Parser.token</code></pre>
+<pre><span id="VAL__ocaml_lex_read_string_rec"><span class="keyword">val</span> __ocaml_lex_read_string_rec</span> : <code class="type">Stdlib.Buffer.t -&gt; Stdlib.Lexing.lexbuf -&gt; int -&gt; Parser.token</code></pre></body></html>

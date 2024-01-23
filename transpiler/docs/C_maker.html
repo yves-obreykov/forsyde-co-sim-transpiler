@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Ast.html">
+<link rel="next" href="Hybrid_ir.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="C_maker" rel="Chapter" href="C_maker.html">
+<link title="Hybrid_ir" rel="Chapter" href="Hybrid_ir.html">
+<link title="Lexer" rel="Chapter" href="Lexer.html">
+<link title="Parser" rel="Chapter" href="Parser.html">
+<link title="Transpiler" rel="Chapter" href="Transpiler.html"><title>C_maker</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Ast.html" title="Ast">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Hybrid_ir.html" title="Hybrid_ir">Next</a>
+</div>
+<h1>Module <a href="type_C_maker.html">C_maker</a></h1>
+
+<pre><span id="MODULEC_maker"><span class="keyword">module</span> C_maker</span>: <code class="code">sig</code> <a href="C_maker.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><span id="VALmake_c_header"><span class="keyword">val</span> make_c_header</span> : <code class="type">string</code></pre>
+<pre><span id="VALmake_c_footer"><span class="keyword">val</span> make_c_footer</span> : <code class="type">string</code></pre>
+<pre><span id="VALpprint_value_list"><span class="keyword">val</span> pprint_value_list</span> : <code class="type"><a href="Ast.html#TYPEvalue">Ast.value</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_inlined_code"><span class="keyword">val</span> pprint_inlined_code</span> : <code class="type"><a href="Ast.html#TYPEvalue">Ast.value</a> list -&gt; string</code></pre>
+<pre><span id="VALpprint_string_list"><span class="keyword">val</span> pprint_string_list</span> : <code class="type">string list -&gt; string</code></pre>
+<pre><span id="VALpprint_input_list"><span class="keyword">val</span> pprint_input_list</span> : <code class="type">int -&gt; 'a list -&gt; string</code></pre>
+<pre><span id="VALpprint_output_list"><span class="keyword">val</span> pprint_output_list</span> : <code class="type">int -&gt; 'a list -&gt; string</code></pre>
+<pre><span id="VALfindi"><span class="keyword">val</span> findi</span> : <code class="type">'a -&gt; 'a list -&gt; int -&gt; int</code></pre>
+<pre><span id="VALextract_size"><span class="keyword">val</span> extract_size</span> : <code class="type">string -&gt; string list -&gt; int option</code></pre>
+<pre><span id="VALcheck_string_contains"><span class="keyword">val</span> check_string_contains</span> : <code class="type">string -&gt; string -&gt; bool</code></pre>
+<pre><span id="VALmake_c_actors"><span class="keyword">val</span> make_c_actors</span> : <code class="type">string -&gt;<br>       string -&gt;<br>       string -&gt;<br>       string -&gt;<br>       string list list -&gt;<br>       string list -&gt; <a href="Hybrid_ir.html#TYPEir_vertex">Hybrid_ir.ir_vertex</a> list -&gt; string * string * string * string</code></pre>
+<pre><span id="VALsy_find_functions_and_signals"><span class="keyword">val</span> sy_find_functions_and_signals</span> : <code class="type">string -&gt;<br>       string -&gt; string -&gt; <a href="Hybrid_ir.html#TYPEir_vertex">Hybrid_ir.ir_vertex</a> list -&gt; string * string * string</code></pre>
+<pre><span id="VALmake_c_code_threads"><span class="keyword">val</span> make_c_code_threads</span> : <code class="type">string list list -&gt; string list -&gt; string -&gt; <a href="Hybrid_ir.html#TYPEir_systemgraph">Hybrid_ir.ir_systemgraph</a> -&gt; unit</code></pre>
+<pre><span id="VALmake_c_code_simple"><span class="keyword">val</span> make_c_code_simple</span> : <code class="type">string list list -&gt; string list -&gt; 'a -&gt; <a href="Hybrid_ir.html#TYPEir_systemgraph">Hybrid_ir.ir_systemgraph</a> -&gt; unit</code></pre>
+<pre><span id="VALmake_c_code_simple_sy"><span class="keyword">val</span> make_c_code_simple_sy</span> : <code class="type">'a -&gt; 'b -&gt; 'c -&gt; <a href="Hybrid_ir.html#TYPEir_systemgraph">Hybrid_ir.ir_systemgraph</a> -&gt; unit</code></pre>
+<pre><span id="VALmake_c_code_threads_sy"><span class="keyword">val</span> make_c_code_threads_sy</span> : <code class="type">'a -&gt; 'b -&gt; string -&gt; <a href="Hybrid_ir.html#TYPEir_systemgraph">Hybrid_ir.ir_systemgraph</a> -&gt; unit</code></pre></body></html>

@@ -1,11 +1,14 @@
 
 type systemgraph =
+(** This is the main type of the systemgraph. It contains a list of vertices and a list of edges. *)
   | Systemgraph of vertex list * edge list
 
 and vertex =
+(** This type represents a vertex in the systemgraph. It contains a name, a list of attributes, a list of signals and a list of parameters. *)
   | Vertex of string * attr list * signal list * param list
 
 and attr =
+(** This type represents an attribute. It can have up to eight values. *)
   | AttributeOne of string
   | AttributeTwo of string * string
   | AttributeThree of string * string * string
@@ -16,24 +19,29 @@ and attr =
   | AttributeEight of string * string * string * string * string * string * string * string
 
 and signal =
+(** This type represents a signal. *)
   | Signal of string
 
 and param =
+(** This type represents a parameter. It can be a leaf or a node. *)
   | ParamLeaf of string * value list
   | ParamNode of string * param list
 
 and value =
+(** This type represents a value. *)
   | Value of string
 
 and edge =
+(** This type represents an edge in the systemgraph. It contains a list of attributes, a signal and a port for the source and a signal and a port for the target. *)
   | Edge of attr list * signal * port option * signal * port option
 
 and port =
+(** This type represents a port. *)
   | Port of string
 
 
-(* Pretty printing *)
 let pprint_systemgraph = function
+(** This function pretty prints a systemgraph. *)
   | Some Systemgraph(vl, el) ->
     let rec pprint_vertex_list = function
       | [] -> ""
@@ -91,6 +99,7 @@ let pprint_systemgraph = function
 
 
 let find_super_loop = function
+(** This function finds the superLoopEntries in the systemgraph. *)
 | Some Systemgraph(vl, el) ->
   let rec find_super_loop_vertex params_found names_found = function
     | [] -> (None, params_found, names_found)
@@ -136,8 +145,8 @@ let find_super_loop = function
 
 
 
-(* Find vertices with the attribute "forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel" *)
 let find_sdf_channel_sizes = function
+(** Find vertices with the attribute "forsyde::io::lib::hierarchy::behavior::moc::sdf::SDFChannel" *)
 | Some Systemgraph(vl, el) ->
   let rec find_sdf_channels_vertex = function
     | [] -> []

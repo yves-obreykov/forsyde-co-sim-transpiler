@@ -162,3 +162,8 @@ This takes about 26 seconds on my system.
 5. Compile this c file using "gcc ../example-c-implementation/output.c"
 6. Run and time the executable using "time ./a.exe ../example-c-implementation/input.txt"
 7. It takes 50 input tokens from the input file automatically, then pass them through 4 mapSY and it will produce outputs (50 integers x 4) to stdout. On my system it takes about 15 seconds to run this example.
+
+# Steps to build the documentation
+1. go to transpiler directory
+2. run "make docs"
+3. This will make the html documentaion in the docs\ folder, you can open index.html and navigate

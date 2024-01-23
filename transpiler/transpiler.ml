@@ -1,4 +1,4 @@
-(* File transpiler.ml *)
+(** File transpiler.ml *)
 
 open Lexer
 open Ast
@@ -6,13 +6,16 @@ open Lexing
 open Printf
 open Hybrid_ir
 open C_maker
+open Parser
 
 let print_position out_channel lexbuf =
+(** This function prints the position of the error in the input file *)
   let pos = lexbuf.lex_curr_p in
   fprintf out_channel "%s:%d:%d" 
          pos.pos_fname pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
 let parse_with_error lexbuf sequences sizes actor_type target_platform =
+(** This function parses the input file and prints the AST and the hybrid IR and then makes the C code *)
   let res =
     try
       Parser.main Lexer.read lexbuf
@@ -51,6 +54,7 @@ let parse_with_error lexbuf sequences sizes actor_type target_platform =
 
 
 let rec find_sequence lexbuf =
+(** This function finds the sequence of actors and the channel sizes from the solved sequence file *)
   let res =
     try
       Parser.main Lexer.read lexbuf
@@ -65,8 +69,8 @@ let rec find_sequence lexbuf =
   
 
 
-
 let () =
+(** This is the main function of the compiler. It takes as input the name of the input file and the actor type (sy or sdf) and the target platform (multithread, multicore or singlethread) *)
   print_endline "Welcome to the ForSyDe IO to C compiler!";
   let filename = Sys.argv.(1) in
   print_endline "The input file is:";
